@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyORM", "EasyORM\EasyORM.csproj", "{18CDD354-48DB-4D2E-886B-1ABEB02FB717}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyORM.UnitTests", "EasyORM.UnitTests\EasyORM.UnitTests.csproj", "{178F525E-E0EC-458B-8AC2-D32B0E86E11C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18CDD354-48DB-4D2E-886B-1ABEB02FB717}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18CDD354-48DB-4D2E-886B-1ABEB02FB717}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18CDD354-48DB-4D2E-886B-1ABEB02FB717}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18CDD354-48DB-4D2E-886B-1ABEB02FB717}.Release|Any CPU.Build.0 = Release|Any CPU
+		{178F525E-E0EC-458B-8AC2-D32B0E86E11C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{178F525E-E0EC-458B-8AC2-D32B0E86E11C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{178F525E-E0EC-458B-8AC2-D32B0E86E11C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{178F525E-E0EC-458B-8AC2-D32B0E86E11C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
