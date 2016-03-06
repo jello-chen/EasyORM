@@ -36,8 +36,16 @@
     <AssemblyOriginatorKeyFile>EasyORM.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,14 +54,121 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuilderContext.cs" />
+    <Compile Include="Configuration\Config.cs" />
+    <Compile Include="Configuration\ConfigSection.cs" />
+    <Compile Include="Configuration\EntityConfiguration.cs" />
+    <Compile Include="Configuration\EntityConfigurationManager.cs" />
+    <Compile Include="Configuration\Logger.cs" />
+    <Compile Include="Configuration\PropertyConfiguration.cs" />
+    <Compile Include="DatabaseConfig.cs" />
     <Compile Include="DataContext.cs" />
+    <Compile Include="DataQuery.cs" />
+    <Compile Include="DbSet.cs" />
+    <Compile Include="DbUtils\ColumnType.cs" />
+    <Compile Include="DbUtils\DataAnnotations\AutoIncrementAttribute.cs" />
+    <Compile Include="DbUtils\DataAnnotations\CompareAttribute.cs" />
+    <Compile Include="DbUtils\DataAnnotations\DataBaseAttribute.cs" />
+    <Compile Include="DbUtils\DataAnnotations\DataSourceAttribute.cs" />
+    <Compile Include="DbUtils\DataAnnotations\NonSelectAttribute.cs" />
+    <Compile Include="DbUtils\ReflectorConsts.cs" />
+    <Compile Include="DynamicObject\BaseTypeSwitcher.cs" />
+    <Compile Include="DynamicObject\DataReaderGetMethodSwitcher.cs" />
+    <Compile Include="DynamicObject\DynamicProxy.cs" />
+    <Compile Include="DynamicObject\ExpressionReflector.cs" />
+    <Compile Include="DynamicObject\ExpressionReflectorCore.cs" />
+    <Compile Include="DynamicObject\IGetUpdatedValues.cs" />
+    <Compile Include="DynamicObject\ObjectPropertyConvertType.cs" />
+    <Compile Include="IEntityOperator.cs" />
+    <Compile Include="LoggerCollection.cs" />
+    <Compile Include="Logging\DefaultLogWriter.cs" />
+    <Compile Include="Logging\ILogWriter.cs" />
+    <Compile Include="Logging\LogWriterFactory.cs" />
+    <Compile Include="ObjectMapper\EntityMapper.cs" />
+    <Compile Include="ObjectMapper\Mapper.cs" />
+    <Compile Include="ParseResult.cs" />
+    <Compile Include="ParserUtils.cs" />
+    <Compile Include="Parser\ExpressionParser.cs" />
+    <Compile Include="Parser\ExpressionVisitorBase.cs" />
+    <Compile Include="Parser\JoinExpressionVisitor.cs" />
+    <Compile Include="Parser\MemberExpressionVisitor.cs" />
+    <Compile Include="Parser\MethodCallExpressionVisitor.cs" />
+    <Compile Include="Parser\NoLockExpressionVisitor.cs" />
+    <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Parser\PropertyFieldExpressionVisitor.cs" />
+    <Compile Include="Parser\SelectExpressionVisitor.cs" />
+    <Compile Include="Parser\SqlExpressionParser.cs" />
+    <Compile Include="Parser\WhereExpressionVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Provider\BaseTypeConverter.cs" />
+    <Compile Include="Provider\BuilderFactory.cs" />
+    <Compile Include="Provider\CodeGenerator.cs" />
+    <Compile Include="Provider\DatabaseTypes.cs" />
+    <Compile Include="Provider\EntityInserterBase.cs" />
+    <Compile Include="Provider\EntityOperatorBase.cs" />
+    <Compile Include="Provider\EntityOperatorUtils.cs" />
+    <Compile Include="Provider\EnumerableContainsMethodProcessor.cs" />
+    <Compile Include="Provider\IEntityOperator.cs" />
+    <Compile Include="Provider\ITypeMapper.cs" />
+    <Compile Include="Provider\MethodProcessor.cs" />
+    <Compile Include="Provider\MySql\EntityIdentityInserter.cs" />
+    <Compile Include="Provider\MySql\EntityNoneInserter.cs" />
+    <Compile Include="Provider\MySql\EntityOperator.cs" />
+    <Compile Include="Provider\MySql\EntitySeqenceInserter.cs" />
+    <Compile Include="Provider\MySql\MySqlProvider.cs" />
+    <Compile Include="Provider\MySql\SchemaManager.cs" />
+    <Compile Include="Provider\MySql\SqlBuilder.cs" />
+    <Compile Include="Provider\MySql\TypeMapper.cs" />
+    <Compile Include="Provider\ParserBase.cs" />
+    <Compile Include="Provider\ProviderBase.cs" />
+    <Compile Include="Provider\ProviderFactory.cs" />
+    <Compile Include="Provider\QueryableContainsMethodProcessor.cs" />
+    <Compile Include="Provider\SchemaManagerBase.cs" />
+    <Compile Include="Provider\SqlExecutorBase.cs" />
+    <Compile Include="Provider\SQLite\EntityIdentityInserter.cs" />
+    <Compile Include="Provider\SQLite\EntityNoneInserter.cs" />
+    <Compile Include="Provider\SQLite\EntityOperator.cs" />
+    <Compile Include="Provider\SQLite\EntitySeqenceInserter.cs" />
+    <Compile Include="Provider\SQLite\SchemaManager.cs" />
+    <Compile Include="Provider\SQLite\SqlBuilder.cs" />
+    <Compile Include="Provider\SQLite\SqlExecutor.cs" />
+    <Compile Include="Provider\SQLite\SQLiteProvider.cs" />
+    <Compile Include="Provider\SQLite\TypeMapper.cs" />
+    <Compile Include="Provider\SQLServer\EntityIdentityInserter.cs" />
+    <Compile Include="Provider\SQLServer\EntityNoneInserter.cs" />
+    <Compile Include="Provider\SQLServer\EntityOperator.cs" />
+    <Compile Include="Provider\SQLServer\EntitySeqenceInserter.cs" />
+    <Compile Include="Provider\SQLServer\SchemaManager.cs" />
+    <Compile Include="Provider\SQLServer\SqlBuilder.cs" />
+    <Compile Include="Provider\SQLServer\SqlExecutor.cs" />
+    <Compile Include="Provider\SQLServer\SqlServer2008R2Provider.cs" />
+    <Compile Include="Provider\SQLServer\TypeMapper.cs" />
+    <Compile Include="QueryProvider.cs" />
+    <Compile Include="SchemaModel\Column.cs" />
+    <Compile Include="SchemaModel\Table.cs" />
+    <Compile Include="SqlBuilderBase.cs" />
+    <Compile Include="SqlType.cs" />
+    <Compile Include="TranslateContext.cs" />
+    <Compile Include="TranslateModel\Column.cs" />
+    <Compile Include="TranslateModel\ColumnConverter.cs" />
+    <Compile Include="TranslateModel\CompareType.cs" />
+    <Compile Include="TranslateModel\Condition.cs" />
+    <Compile Include="TranslateModel\Join.cs" />
+    <Compile Include="TranslateModel\Table.cs" />
+    <Compile Include="TranslateModel\Token.cs" />
+    <Compile Include="Utils\DictionaryExtension.cs" />
+    <Compile Include="Utils\IEnumberableExtension.cs" />
+    <Compile Include="Utils\ObjectCache`1.cs" />
+    <Compile Include="Utils\ObjectDictionaryCache.cs" />
+    <Compile Include="Utils\ReflectorConsts.cs" />
+    <Compile Include="Utils\Singleton.cs" />
+    <Compile Include="Utils\StringHelper.cs" />
+    <Compile Include="Utils\TypeHelper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Configuration\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="EasyORM.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
