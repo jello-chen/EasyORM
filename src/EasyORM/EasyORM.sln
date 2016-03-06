@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyORM", "EasyORM\EasyORM.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyORM.UnitTests", "EasyORM.UnitTests\EasyORM.UnitTests.csproj", "{178F525E-E0EC-458B-8AC2-D32B0E86E11C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyORM.Samples", "EasyORM.Samples\EasyORM.Samples.csproj", "{FDEC77A1-F5CA-4B8B-A769-1554102B3462}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{178F525E-E0EC-458B-8AC2-D32B0E86E11C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{178F525E-E0EC-458B-8AC2-D32B0E86E11C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{178F525E-E0EC-458B-8AC2-D32B0E86E11C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDEC77A1-F5CA-4B8B-A769-1554102B3462}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDEC77A1-F5CA-4B8B-A769-1554102B3462}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDEC77A1-F5CA-4B8B-A769-1554102B3462}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDEC77A1-F5CA-4B8B-A769-1554102B3462}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
