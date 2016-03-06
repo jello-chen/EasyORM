@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace EasyORM
 {
-    public class Class1
+    /// <summary>
+    /// DataContext
+    /// </summary>
+    public class DataContext
     {
+
     }
 }
