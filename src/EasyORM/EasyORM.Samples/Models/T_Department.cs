@@ -9,7 +9,7 @@ namespace EasyORM.Samples.Models
 {
     class T_Department
     {
-        [DataSource(DataSource = DbUtils.ColumnType.AutoIncreament)]
+        [DataSource(DataSource = DbUtils.KeyColumnType.AutoIncreament)]
         public int ID { get; set; }
         public string Name { get; set; }
     }
