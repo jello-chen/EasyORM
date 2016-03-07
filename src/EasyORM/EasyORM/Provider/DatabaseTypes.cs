@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace EasyORM.Provider
 {
     /// <summary>
-    /// 数据库类型
+    /// Database Type
     /// </summary>
     public enum DatabaseTypes
     {

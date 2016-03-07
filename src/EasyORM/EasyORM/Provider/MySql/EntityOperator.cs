@@ -26,7 +26,7 @@ namespace EasyORM.Provider.MySql
             _sqlExecutor = _provider.CreateSqlExecutor();
             _sqlBuilder = _provider.CreateSqlBuilderFactory().CreateSqlBuilder();
         }
-        #region 批量插入
+        #region Bulk insert
         int IEntityOperator.InsertEntities(ArrayList list)
         {
             if (list.Count <= 0)
@@ -34,18 +34,18 @@ namespace EasyORM.Provider.MySql
                 return 0;
             }
             var table = _context.EntityCfgManager.Value.GetTable(list[0].GetType());
-            var dataSourceType = EntityOperatorUtils.GetDataSourceType(table);
+            var dataSourceType = EntityOperatorUtils.GetKeyColumnType(table);
             EntityInserterBase inserter = null;
             switch (dataSourceType)
             {
-                case ColumnType.AutoIncreament:
+                case KeyColumnType.AutoIncreament:
                     inserter = new EntityIdentityInserter(_context, table);
                     break;
-                case ColumnType.None:
+                case KeyColumnType.None:
                     inserter = new EntityNoneInserter(_context, table);
                     break;
-                case ColumnType.Sequence:
-                    inserter = new EntitySeqenceInserter(_context, table);
+                case KeyColumnType.Sequence:
+                    inserter = new EntitySequenceInserter(_context, table);
                     break;
             }
             return inserter.Insert(list);
@@ -83,7 +83,6 @@ namespace EasyORM.Provider.MySql
             //}
             //if (list.Count <= 10)
             //{
-            //    #region 使用Insert语句插入
             //    var insertStart = "insert into {0}({1}) values{2}";
             //    var tableName = string.Empty;
             //    if (!string.IsNullOrWhiteSpace(table.DataBase))
@@ -130,7 +129,6 @@ namespace EasyORM.Provider.MySql
             //}
             //else
             //{
-            //    #region 使用SqlBulkCopy插入
             //    var sqlBulkCopy = new SqlBulkCopy(DataContext.ConnectionString);
             //    sqlBulkCopy.DestinationTableName = "dbo.[" + table.Name + "]";
             //    sqlBulkCopy.BulkCopyTimeout = 300;
@@ -176,7 +174,7 @@ namespace EasyORM.Provider.MySql
             var keyValue = values.GetOrDefault(keyColumn.Name);
             if (keyValue == null)
             {
-                throw new InvalidOperationException("字典未传入主键");
+                throw new InvalidOperationException("Not found the key");
             }
             var updateSql = "UPDATE {0} SET {1} WHERE {2}";
             var tableName = _sqlBuilder.GetTableName(table);

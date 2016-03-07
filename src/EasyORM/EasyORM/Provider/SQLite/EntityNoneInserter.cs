@@ -10,7 +10,7 @@ using EasyORM.SchemaModel;
 namespace EasyORM.Provider.SQLite
 {
     /// <summary>
-    /// 当实体没有任何主键时，使用该类进行持久化到数据库
+    /// None Key Entity Inserter
     /// </summary>
     public class EntityNoneInserter : EntityInserterBase
     {

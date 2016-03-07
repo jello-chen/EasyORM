@@ -9,7 +9,7 @@ using EasyORM.SchemaModel;
 namespace EasyORM.Configuration
 {
     /// <summary>
-    /// 用于进行实体属性配置的工具
+    /// Property Configuration
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class PropertyConfiguration<T>
@@ -23,7 +23,7 @@ namespace EasyORM.Configuration
             _propertyName = propertyName;
         }
         /// <summary>
-        /// 指定最大长度
+        /// Set the max length on column
         /// </summary>
         /// <param name="length"></param>
         /// <returns></returns>
@@ -38,13 +38,13 @@ namespace EasyORM.Configuration
             var column = _table.Columns.FirstOrDefault(x => x.Value.PropertyInfo.Name == _propertyName).Value;
             if (column == null)
             {
-                throw new Exception("未找到" + _propertyName + "属性");
+                throw new Exception("Not supported " + _propertyName + " property");
             }
             return column;
         }
 
         /// <summary>
-        /// 指定类型
+        /// Set the db type on column
         /// </summary>
         /// <param name="dbType"></param>
         /// <returns></returns>
@@ -55,7 +55,7 @@ namespace EasyORM.Configuration
         }
 
         /// <summary>
-        /// Deicmal类型专用
+        /// Set the precision on column when decimal
         /// </summary>
         /// <param name="precision"></param>
         /// <param name="scale"></param>
@@ -69,7 +69,7 @@ namespace EasyORM.Configuration
         }
 
         /// <summary>
-        /// 指定列名
+        /// Set the name on column
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>

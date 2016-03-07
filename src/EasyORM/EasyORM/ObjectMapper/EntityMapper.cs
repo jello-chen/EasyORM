@@ -190,7 +190,7 @@
                 }
                 return list;
             }
-            var mapper = ExpressionReflector.GetDataReaderMapeer(objectType, dataReader);
+            var mapper = ExpressionReflector.GetDataReaderMaper(objectType, dataReader);
             return mapper(dataReader);
         }
 

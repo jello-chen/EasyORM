@@ -24,7 +24,7 @@ namespace EasyORM.Provider.SQLServer
         }
 
         /// <summary>
-        /// 插入实体集
+        /// Insert a list data
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
@@ -53,7 +53,7 @@ namespace EasyORM.Provider.SQLServer
                 var autoincreamentColumn = string.Empty;
                 foreach (var item in _table.Columns.Values)
                 {
-                    if (item.ColumnType == ColumnType.AutoIncreament)
+                    if (item.ColumnType == KeyColumnType.AutoIncreament)
                     {
                         autoincreamentColumn = item.Name;
                         continue;
@@ -85,7 +85,7 @@ namespace EasyORM.Provider.SQLServer
             }
             else
             {
-                #region 使用SqlBulkCopy插入
+                #region Insert by using SqlBulkCopy
                 var sqlBulkCopy = new SqlBulkCopy(_dataContext.DatabaseConfig.ConnectionString);
                 sqlBulkCopy.DestinationTableName = "dbo.[" + _table.Name + "]";
                 sqlBulkCopy.BulkCopyTimeout = 300;

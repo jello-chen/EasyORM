@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 namespace EasyORM
 {
     /// <summary>
-    /// 提供数据库操作的数据集
+    /// Provides a set of db operation
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Entity type</typeparam>
     public class DbSet<T> : IQueryable<T>, IOrderedQueryable<T>, IEntityOperator
     {
         DataQuery<T> _dataQuery;

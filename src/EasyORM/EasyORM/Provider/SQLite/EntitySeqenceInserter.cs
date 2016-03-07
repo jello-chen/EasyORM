@@ -11,9 +11,6 @@ using EasyORM.Configuration;
 
 namespace EasyORM.Provider.SQLite
 {
-    /// <summary>
-    /// 当实体没有任何主键时，使用该类进行持久化到数据库
-    /// </summary>
     public class EntitySeqenceInserter : EntityInserterBase
     {
         Table _table;

@@ -20,9 +20,42 @@ namespace EasyORM
     /// </summary>
     public class DataContext
     {
-        internal static ConfigSection GlobalConfig { get; private set; }
+        #region Fields
 
-        Lazy<EntityConfigurationManager> _entityCfgManager;
+        private Lazy<EntityConfigurationManager> _entityCfgManager;
+        private Type _dataContextType;
+        private static Type _dbSetType = typeof(DbSet<>);
+        private static Dictionary<Type, DatabaseConfig> _databaseConfigs = new Dictionary<Type, DatabaseConfig>();
+        /// <summary>
+        /// DbSet cache,the key is the type of DataContext
+        /// </summary>
+        private Dictionary<Type, Dictionary<string, object>> _dbSets = new Dictionary<Type, Dictionary<string, object>>();
+
+        /// <summary>
+        /// DbSet property cache,the key is the type of DataContext
+        /// </summary>
+        private static Dictionary<Type, Dictionary<string, PropertyInfo>> _dbSetProperties = new Dictionary<Type, Dictionary<string, PropertyInfo>>();
+
+        /// <summary>
+        /// The cache that maps entity type to DbSet
+        /// </summary>
+        Dictionary<Type, object> _entitieDbSets = new Dictionary<Type, object>();
+        private static HashSet<Type> _entityTypes = new HashSet<Type>();
+
+        /// <summary>
+        /// The database provider supported 
+        /// </summary>
+        public readonly static Dictionary<DatabaseTypes, string> SupportProviders = new Dictionary<DatabaseTypes, string>(){
+            { DatabaseTypes.SQLServer,"System.Data.SqlClient"},
+            {DatabaseTypes.SQLite,"System.Data.SQLite"},
+            {DatabaseTypes.MySql,"MySql.Data.MySqlClient"}
+        };
+
+        #endregion
+
+        #region Properties
+
+        internal static ConfigSection GlobalConfig { get; private set; }
 
         public Lazy<EntityConfigurationManager> EntityCfgManager
         {
@@ -36,24 +69,129 @@ namespace EasyORM
         /// Database configuration related to current instance
         /// </summary>
         public DatabaseConfig DatabaseConfig { get; private set; }
-        Type _dataContextType;
-        static Type _dbSetType = typeof(DbSet<>);
-        static Dictionary<Type, DatabaseConfig> _databaseConfigs = new Dictionary<Type, DatabaseConfig>();
-        /// <summary>
-        /// DbSet cache,the key is the type of DataContext
-        /// </summary>
-        Dictionary<Type, Dictionary<string, object>> _dbSets = new Dictionary<Type, Dictionary<string, object>>();
 
-        /// <summary>
-        /// DbSet property cache,the key is the type of DataContext
-        /// </summary>
-        static Dictionary<Type, Dictionary<string, PropertyInfo>> _dbSetProperties = new Dictionary<Type, Dictionary<string, PropertyInfo>>();
+        #endregion
 
-        /// <summary>
-        /// The cache that maps entity type to DbSet
-        /// </summary>
-        Dictionary<Type, object> _entitieDbSets = new Dictionary<Type, object>();
-        static HashSet<Type> _entityTypes = new HashSet<Type>();
+        #region Constructors
+
+        static DataContext()
+        {
+            #region Init Config
+            GlobalConfig = ConfigurationManager.GetSection("easyORM") as ConfigSection;
+            if (GlobalConfig != null)
+            {
+                Config.IsEnableLog = GlobalConfig.IsEnableLog;
+                Config.SequenceTable = GlobalConfig.SequenceTable;
+                Config.SqlBuilder = GlobalConfig.SqlBuilder;
+                Config.IsEnableAutoCreateTables = string.IsNullOrWhiteSpace(GlobalConfig.IsAutoCreateTables) ? false : Convert.ToBoolean(GlobalConfig.IsAutoCreateTables);
+                Config.IsEnableAllwayAutoCreateTables = string.IsNullOrWhiteSpace(GlobalConfig.IsEnableAllwayAutoCreateTables) ? false : Convert.ToBoolean(GlobalConfig.IsEnableAllwayAutoCreateTables);
+            }
+            if (string.IsNullOrWhiteSpace(Config.SequenceTable))
+            {
+                Config.SequenceTable = "Sequences";
+            }
+            #endregion
+        }
+
+        public DataContext(string connectionString, string providerName)
+        {
+            Init(connectionString, providerName);
+        }
+
+        public DataContext(string connectionStringName)
+        {
+            var conn = ConfigurationManager.ConnectionStrings[connectionStringName];
+            if (conn == null)
+            {
+                throw new Exception("Connection string " + connectionStringName + "is not found");
+            }
+            Init(conn.ConnectionString, conn.ProviderName);
+        }
+        #endregion
+
+        #region Methods
+
+        private void Init(string connectionString, string providerName)
+        {
+            _dataContextType = GetType();
+            var databaseConfig = _databaseConfigs.GetOrDefault(_dataContextType);
+            if (databaseConfig == null)
+            {
+                lock (_databaseConfigs)
+                {
+                    databaseConfig = _databaseConfigs.GetOrDefault(_dataContextType);
+                    if (databaseConfig == null)
+                    {
+                        databaseConfig = new DatabaseConfig();
+                        databaseConfig.ConnectionString = connectionString;
+                        databaseConfig.ProviderName = providerName;
+                        foreach (var item in SupportProviders)
+                        {
+                            if (item.Value == providerName)
+                            {
+                                databaseConfig.DatabaseType = item.Key;
+                                break;
+                            }
+                        }
+                        _databaseConfigs.Add(_dataContextType, databaseConfig);
+                    }
+                }
+            }
+            DatabaseConfig = databaseConfig;
+            Provider = ProviderFactory.CreateProvider(this);
+            _entityCfgManager = new Lazy<EntityConfigurationManager>(GetEntityCfgManager);
+            Dictionary<string, PropertyInfo> dbSetProperties;
+            Dictionary<string, object> dbSets;
+
+            //Cache DbSet Property
+            if (!_dbSetProperties.TryGetValue(_dataContextType, out dbSetProperties))
+            {
+                lock (_dbSetProperties)
+                {
+                    if (!_dbSetProperties.TryGetValue(_dataContextType, out dbSetProperties))
+                    {
+                        dbSetProperties = _dataContextType.GetProperties().Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == _dbSetType).ToDictionary(x => x.Name);
+                        _dbSetProperties.Add(_dataContextType, dbSetProperties);
+                    }
+                }
+            }
+
+            //Cache DbSet
+            if (!_dbSets.TryGetValue(_dataContextType, out dbSets))
+            {
+                lock (_dbSets)
+                {
+                    if (!_dbSets.TryGetValue(_dataContextType, out dbSets))
+                    {
+                        dbSets = new Dictionary<string, object>();
+                        foreach (var dbSet in dbSetProperties)
+                        {
+                            var entityType = dbSet.Value.PropertyType.GetGenericArguments()[0];
+                            var set = AddEntityType(entityType, dbSet.Value.PropertyType);
+                            dbSets.Add(StringHelper.ToPlural(entityType.Name), set);
+                        }
+                        _dbSets.Add(_dataContextType, dbSets);
+                    }
+                }
+            }
+
+            foreach (var dbSetProperty in dbSetProperties)
+            {
+                dbSetProperty.Value.SetValue(this, dbSets[StringHelper.ToPlural(dbSetProperty.Value.PropertyType.GetGenericArguments()[0].Name)]);
+            }
+
+            var entityConfiguration = EntityCfgManager.Value;
+
+            ConfigurationModel(entityConfiguration);
+
+            if (AllowCreateTable())
+            {
+                foreach (var entityType in _entityTypes)
+                {
+                    CreateTable(entityType);
+                }
+            }
+        }
 
         /// <summary>
         /// Whether the type is entity
@@ -84,7 +222,7 @@ namespace EasyORM
         /// <returns></returns>
         public IList<T> SqlQuery<T>(string sql, Dictionary<string, object> parameters)
         {
-            var sqlExecutor =Provider.CreateSqlExecutor();
+            var sqlExecutor = Provider.CreateSqlExecutor();
             using (sqlExecutor)
             {
                 var reader = sqlExecutor.ExecuteReader(sql, parameters);
@@ -124,36 +262,7 @@ namespace EasyORM
         }
 
         /// <summary>
-        /// The database provider supported 
-        /// </summary>
-        public readonly static Dictionary<DatabaseTypes, string> SupportProviders = new Dictionary<DatabaseTypes, string>(){
-            { DatabaseTypes.SQLServer,"System.Data.SqlClient"},
-            {DatabaseTypes.SQLite,"System.Data.SQLite"},
-            {DatabaseTypes.MySql,"MySql.Data.MySqlClient"}
-        };
-        //private string _connectionStringName;
-
-        static DataContext()
-        {
-            #region Init Config
-            GlobalConfig = ConfigurationManager.GetSection("easyORM") as ConfigSection;
-            if (GlobalConfig != null)
-            {
-                Config.IsEnableLog = GlobalConfig.IsEnableLog;
-                Config.SequenceTable = GlobalConfig.SequenceTable;
-                Config.SqlBuilder = GlobalConfig.SqlBuilder;
-                Config.IsEnableAutoCreateTables = string.IsNullOrWhiteSpace(GlobalConfig.IsAutoCreateTables) ? false : Convert.ToBoolean(GlobalConfig.IsAutoCreateTables);
-                Config.IsEnableAllwayAutoCreateTables = string.IsNullOrWhiteSpace(GlobalConfig.IsEnableAllwayAutoCreateTables) ? false : Convert.ToBoolean(GlobalConfig.IsEnableAllwayAutoCreateTables);
-            }
-            if (string.IsNullOrWhiteSpace(Config.SequenceTable))
-            {
-                Config.SequenceTable = "Sequences";
-            }
-            #endregion
-        }
-
-        /// <summary>
-        /// 配置实体的相关信息
+        /// Configurate model
         /// </summary>
         protected virtual void ConfigurationModel(EntityConfigurationManager entityConfiguration)
         {
@@ -161,7 +270,7 @@ namespace EasyORM
         }
 
         /// <summary>
-        /// 将指定实体初始化并缓存
+        /// Add entity type
         /// </summary>
         /// <param name="entityType"></param>
         object AddEntityType(Type entityType, Type dbsetType)
@@ -177,6 +286,10 @@ namespace EasyORM
             return set;
         }
 
+        /// <summary>
+        /// If allowed,then create table
+        /// </summary>
+        /// <param name="entityType"></param>
         void CreateTableIfAllow(Type entityType)
         {
             if (!AllowCreateTable())
@@ -187,7 +300,7 @@ namespace EasyORM
         }
 
         /// <summary>
-        /// 是否允许创建表
+        /// whether to allow to create table
         /// </summary>
         /// <returns></returns>
         bool AllowCreateTable()
@@ -213,7 +326,7 @@ namespace EasyORM
             }
             else if (Config.IsEnableAllwayAutoCreateTables)
             {
-                throw new Exception("检测到未启用【自动创建数据库表】功能，但启用了【始终自动创建数据库表】功能，请检查配置，除非需要此功能，否则不要启用");
+                throw new InvalidOperationException("Config.IsEnableAutoCreateTables is false");
             }
             else
             {
@@ -228,122 +341,12 @@ namespace EasyORM
             var existsTable = schemaManager.GetTable(table.Name);
             if (existsTable == null)
             {
-                //创建该表
                 schemaManager.CreateTable(table);
             }
         }
 
-        #region 构造方法
-
-        public DataContext(string connectionString,string providerName)
-        {
-            Init(connectionString, providerName);
-        }
-
-        void Init(string connectionString,string providerName)
-        {
-            _dataContextType = GetType();
-            var databaseConfig = _databaseConfigs.GetOrDefault(_dataContextType);
-            if (databaseConfig == null)
-            {
-                lock (_databaseConfigs)
-                {
-                    databaseConfig = _databaseConfigs.GetOrDefault(_dataContextType);
-                    if (databaseConfig == null)
-                    {
-                        databaseConfig = new DatabaseConfig();
-                        databaseConfig.ConnectionString = connectionString;
-                        databaseConfig.ProviderName = providerName;
-                        foreach (var item in SupportProviders)
-                        {
-                            if (item.Value == providerName)
-                            {
-                                databaseConfig.DatabaseType = item.Key;
-                                break;
-                            }
-                        }
-                        _databaseConfigs.Add(_dataContextType, databaseConfig);
-                    }
-                }
-            }
-            DatabaseConfig = databaseConfig;
-            Provider = ProviderFactory.CreateProvider(this);
-            _entityCfgManager = new Lazy<EntityConfigurationManager>(GetEntityCfgManager);
-            Dictionary<string, PropertyInfo> dbSetProperties;
-            Dictionary<string, object> dbSets;
-
-            #region 获取DbSet<T>属性集
-            if (!_dbSetProperties.TryGetValue(_dataContextType, out dbSetProperties))
-            {
-                lock (_dbSetProperties)
-                {
-                    if (!_dbSetProperties.TryGetValue(_dataContextType, out dbSetProperties))
-                    {
-                        dbSetProperties = _dataContextType.GetProperties().Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == _dbSetType).ToDictionary(x => x.Name);
-                        _dbSetProperties.Add(_dataContextType, dbSetProperties);
-                    }
-                }
-            }
-            #endregion
-
-            #region 从获取到的属性集中获取硬编码的所有实体并更新到缓存
-            if (!_dbSets.TryGetValue(_dataContextType, out dbSets))
-            {
-                lock (_dbSets)
-                {
-                    if (!_dbSets.TryGetValue(_dataContextType, out dbSets))
-                    {
-                        dbSets = new Dictionary<string, object>();
-                        foreach (var dbSet in dbSetProperties)
-                        {
-                            var entityType = dbSet.Value.PropertyType.GetGenericArguments()[0];
-                            var set = AddEntityType(entityType, dbSet.Value.PropertyType);
-                            dbSets.Add(StringHelper.ToPlural(entityType.Name), set);
-                        }
-                        _dbSets.Add(_dataContextType, dbSets);
-                    }
-                }
-            }
-            #endregion
-
-            #region 给DbSet<T>属性赋值
-            foreach (var dbSetProperty in dbSetProperties)
-            {
-                dbSetProperty.Value.SetValue(this, dbSets[StringHelper.ToPlural(dbSetProperty.Value.PropertyType.GetGenericArguments()[0].Name)]);
-            }
-            #endregion
-
-            var entityConfiguration = EntityCfgManager.Value;
-
-            ConfigurationModel(entityConfiguration);
-
-            if (AllowCreateTable())
-            {
-                foreach (var entityType in _entityTypes)
-                {
-                    CreateTable(entityType);
-                }
-            }
-        }
-
         /// <summary>
-        /// 构造方法
-        /// </summary>
-        /// <param name="name">连接字符串名</param>
-        public DataContext(string name)
-        {
-            var conn = ConfigurationManager.ConnectionStrings[name];
-            if (conn == null)
-            {
-                throw new Exception("连接字符串" + name + "未找到");
-            }
-            Init(conn.ConnectionString, conn.ProviderName);
-        }
-        #endregion
-
-        #region 保存到数据库
-        /// <summary>
-        /// 保存更改到数据库，若保存成功则，清空缓存
+        /// Save changes to database,if fails,clear cache
         /// </summary>
         /// <returns></returns>
         public int SaveChanges()
@@ -351,7 +354,7 @@ namespace EasyORM
             Dictionary<string, object> dbSets;
             if (!_dbSets.TryGetValue(_dataContextType, out dbSets))
             {
-                throw new Exception("初始有问题");
+                throw new Exception("Failed to initialize");
             }
             var count = 0;
             using (var scope = new TransactionScope())
@@ -363,7 +366,7 @@ namespace EasyORM
                     var total = op.InsertEntities(list);
                     if (total != list.Count)
                     {
-                        throw new Exception("批量插入失败");
+                        throw new Exception("Bulk insert failed");
                     }
                     var entityType = dbSet.GetEntityType();
                     if (total <= 10)
@@ -377,13 +380,13 @@ namespace EasyORM
                     var keyColumn = table.Columns.FirstOrDefault(x => x.Value.IsKey).Value;
                     if (keyColumn == null)
                     {
-                        throw new InvalidOperationException("实体" + entityType.FullName + "不存在主键，无法更新");
+                        throw new InvalidOperationException("Enity-" + entityType.FullName + " doesn't exist primary key");
                     }
                     var getters = ExpressionReflector.GetGetters(entityType);
                     var keyGetter = getters.GetOrDefault(keyColumn.PropertyInfo.Name);
                     if (keyGetter == null)
                     {
-                        throw new InvalidOperationException("keyGetter为null");
+                        throw new InvalidOperationException("KeyGetter is null");
                     }
                     foreach (var editing in editings)
                     {
@@ -418,7 +421,7 @@ namespace EasyORM
                         var kv = keyGetter(removing);
                         if (kv == null)
                         {
-                            throw new InvalidOperationException("删除时主键必须有值");
+                            throw new InvalidOperationException("when deleted,the primary key must have a value");
                         }
                         ids.Add(Convert.ToInt32(kv));
                     }
@@ -436,6 +439,7 @@ namespace EasyORM
             }
             return count;
         }
+
         #endregion
 
     }

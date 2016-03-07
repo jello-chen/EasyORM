@@ -86,7 +86,8 @@ namespace EasyORM.Provider.SQLServer
             fromBuilder.Clear();
             if (_context.Distinct)
             {
-                //sqlBuilder中在去重复的情况下无法加入分页代码，需要作为子查询加入
+                //In the duplicate removal condition In SqlBuilder, 
+                //it is not able to page and should be child query sentense
                 tableName = ParserUtils.GenerateAlias("table");
                 fromBuilder.AppendFormat("FROM ({0}) {1}", sql, tableName);
 
@@ -316,7 +317,7 @@ namespace EasyORM.Provider.SQLServer
 
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception(" Not Supported ");
                             }
                             continue;
                         }
@@ -341,13 +342,13 @@ namespace EasyORM.Provider.SQLServer
                                     unit = "SECOND";
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception(" Not Supported ");
                             }
                             converter = FormatConverter(columnConverter.IsInstanceColumn, converter, "DATEDIFF(" + unit + ",{1},{0})", paramName);
                             _result.Parameters.Add(paramName, args[0]);
                             continue;
                         }
-                        throw new Exception("不支持");
+                        throw new Exception(" Not Supported ");
                     case MemberTypes.Method:
                         if (memberInfo.DeclaringType == ReflectorConsts.StringType)
                         {
@@ -370,7 +371,7 @@ namespace EasyORM.Provider.SQLServer
                                         }
                                         else
                                         {
-                                            throw new Exception("不支持");
+                                            throw new Exception(" Not Supported ");
                                         }
                                     }
                                     else if (columnConverter.Parameters.Count == 2)
@@ -381,16 +382,16 @@ namespace EasyORM.Provider.SQLServer
                                         }
                                         else
                                         {
-                                            throw new Exception("不支持");
+                                            throw new Exception(" Not Supported ");
                                         }
                                     }
                                     else
                                     {
-                                        throw new Exception("不支持");
+                                        throw new Exception(" Not Supported ");
                                     }
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception(" Not Supported ");
                             }
                             continue;
                         }
@@ -427,7 +428,7 @@ namespace EasyORM.Provider.SQLServer
                                     _result.Parameters.Add(paramName, args[0]);
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception(" Not Supported ");
                             }
                             continue;
                         }
@@ -438,7 +439,7 @@ namespace EasyORM.Provider.SQLServer
                                 case "Contains":
                                     if (columnConverter.IsInstanceColumn)
                                     {
-                                        throw new Exception("不支持");
+                                        throw new Exception(" Not Supported ");
                                     }
                                     var arg = args[0];
                                     var type = memberInfo.DeclaringType;
@@ -457,7 +458,7 @@ namespace EasyORM.Provider.SQLServer
 
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception(" Not Supported ");
                             }
                         }
                         else if (memberInfo.DeclaringType == ReflectorConsts.EnumerableType)
@@ -467,7 +468,7 @@ namespace EasyORM.Provider.SQLServer
                                 case "Contains":
                                     if (columnConverter.IsInstanceColumn)
                                     {
-                                        throw new Exception("不支持");
+                                        throw new Exception(" Not Supported ");
                                     }
                                     var arg = args[0];
                                     var type = arg.GetType();
@@ -491,7 +492,7 @@ namespace EasyORM.Provider.SQLServer
                                     converter = proccessor.Result.ToString();
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception(" Not Supported ");
                             }
                             continue;
                         }
@@ -502,7 +503,7 @@ namespace EasyORM.Provider.SQLServer
                                 case "Contains":
                                     if (columnConverter.IsInstanceColumn)
                                     {
-                                        throw new Exception("不支持");
+                                        throw new Exception(" Not Supported ");
                                     }
                                     var arg = (IQueryable)args[0];
                                     var type = arg.GetType();
@@ -520,13 +521,13 @@ namespace EasyORM.Provider.SQLServer
 
                                     break;
                                 default:
-                                    throw new Exception("暂时对延迟加载支持不好");
+                                    throw new Exception("It is not friendly to the delay query now");
                             }
                             break;
                         }
                         else
                         {
-                            throw new Exception("不支持");
+                            throw new Exception(" Not Supported ");
                         }
                         break;
                     default:

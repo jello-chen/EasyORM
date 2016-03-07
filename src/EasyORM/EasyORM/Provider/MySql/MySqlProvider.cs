@@ -8,13 +8,11 @@ using EasyORM.Utils;
 namespace EasyORM.Provider.MySql
 {
     /// <summary>
-    /// MySql提供者
+    /// MySql Provider
     /// </summary>
     public class MySqlProvider : ProviderBase
     {
-        /// <summary>
-        /// 实例化
-        /// </summary>
+
         public MySqlProvider(DataContext context)
             : base(context)
         {
@@ -22,7 +20,7 @@ namespace EasyORM.Provider.MySql
         }
 
         /// <summary>
-        /// 返回一个用于在SaveChanges时操作实体的对象
+        /// Gets a IEntityOperator object
         /// </summary>
         /// <returns></returns>
         public override IEntityOperator CreateEntityOperator()
@@ -31,7 +29,7 @@ namespace EasyORM.Provider.MySql
         }
 
         /// <summary>
-        /// 返回一个获取数据库架构的对象
+        /// Gets a Schema Manager object
         /// </summary>
         /// <returns></returns>
         public override SchemaManagerBase CreateSchemaManager()
@@ -40,7 +38,7 @@ namespace EasyORM.Provider.MySql
         }
 
         /// <summary>
-        /// 返回一个类型映射工具
+        /// Get s type mapper 
         /// </summary>
         /// <returns></returns>
         public override ITypeMapper CreateTypeMapper()

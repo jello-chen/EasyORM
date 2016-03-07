@@ -46,11 +46,11 @@ namespace EasyORM.Provider.SQLite
                     column.IsKey = Convert.ToBoolean(schemaRow["IsKey"]);
                     if (Convert.ToBoolean(schemaRow["IsAutoincrement"]))
                     {
-                        column.ColumnType = ColumnType.AutoIncreament;
+                        column.ColumnType = KeyColumnType.AutoIncreament;
                     }
                     else
                     {
-                        column.ColumnType = ColumnType.None;
+                        column.ColumnType = KeyColumnType.None;
                     }
                     if (column.IsKey)
                     {
@@ -83,7 +83,7 @@ namespace EasyORM.Provider.SQLite
                 var typeString = typeMapper.Db2SQLMapper.GetOrDefault(column.DbType);
                 if (string.IsNullOrWhiteSpace(typeString))
                 {
-                    throw new Exception("不支持" + column.DbType.ToString() + "数据类型");
+                    throw new Exception("Not supported " + column.DbType.ToString() + " data type");
                 }
                 columnBuilder.Append(typeString);
                 if (column.MaxLength > 0)
@@ -99,7 +99,7 @@ namespace EasyORM.Provider.SQLite
                     columnBuilder.Append(" ");
                     columnBuilder.Append("PRIMARY KEY");
                 }
-                if (column.ColumnType == ColumnType.AutoIncreament)
+                if (column.ColumnType == KeyColumnType.AutoIncreament)
                 {
                     columnBuilder.Append(" ");
                     columnBuilder.Append("AUTOINCREMENT");

@@ -11,7 +11,7 @@ using EasyORM.Utils;
 namespace EasyORM.Provider
 {
     /// <summary>
-    /// 查询语句执行者基类
+    /// Sql Executor Base
     /// </summary>
     public class SqlExecutorBase : IDisposable
     {

@@ -9,7 +9,7 @@ namespace EasyORM.Utils
     public static class DictionaryExtension
     {
         /// <summary>
-        /// 获取指定Key对应的Value，若未找到将获取默认值
+        /// Get the value based on the key,if can't,return default value
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TValue"></typeparam>
@@ -24,7 +24,7 @@ namespace EasyORM.Utils
         }
 
         /// <summary>
-        /// 获取指定Key对应的Value，若未找到将抛异常
+        /// Get the value based on the key
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TValue"></typeparam>
@@ -36,13 +36,13 @@ namespace EasyORM.Utils
             TValue value = default(TValue);
             if (!dict.TryGetValue(key, out value))
             {
-                throw new KeyNotFoundException("没有找到key:" + key.ToString());
+                throw new KeyNotFoundException("not found key:" + key.ToString());
             }
             return value;
         }
 
         /// <summary>
-        /// 获取指定Key对应的Value，若未找到将使用指定的委托增加值
+        /// Get the value based on the key,if can't,set value
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TValue"></typeparam>

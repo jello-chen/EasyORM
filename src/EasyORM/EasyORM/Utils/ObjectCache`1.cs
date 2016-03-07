@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace EasyORM.Utils
 {
     /// <summary>
-    /// 提供简单的不是线程安全的高性能的对象缓存
+    /// A thread-unsafe but hign-performance object cache
     /// </summary>
     /// <typeparam name="TObject"></typeparam>
     public static class ObjectCache<TObject>

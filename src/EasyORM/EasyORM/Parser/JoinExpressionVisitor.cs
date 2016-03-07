@@ -40,7 +40,7 @@ namespace EasyORM.Provider.Parser
                 visitorSub.Visit(leftTable);
                 if (node.Method.Name == "SelectMany")
                 {
-                    throw new Exception("不支持LeftJoin");
+                    throw new Exception("LeftJoin is not supported");
                     SelectExpression = node.Arguments[2];
                     joinName = ((ParameterExpression)((LambdaExpression)((UnaryExpression)node.Arguments[2]).Operand).Parameters[1]).Name;
                     var joinTmps = visitorSub.Joins;

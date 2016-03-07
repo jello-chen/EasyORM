@@ -22,7 +22,7 @@ namespace EasyORM.Provider.SQLite
         {
             if (_context.NoLockTables.Any())
             {
-                throw new Exception("暂不支持NOLock");
+                throw new Exception(" Not suppoert NoLock");
             }
             var columns = _context.Columns;
             var conditions = _context.Conditions;
@@ -225,13 +225,13 @@ namespace EasyORM.Provider.SQLite
                                     unit = 12 * 60 * 60;
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception("");
                             }
                             converter = FormatConverter(columnConverter.IsInstanceColumn, converter, "((JULIANDAY({0}) - JULIANDAY({1}))*" + unit + ")", paramName);
                             _result.Parameters.Add(paramName, args[0]);
                             continue;
                         }
-                        throw new Exception("不支持");
+                        throw new Exception(" Not Supported ");
                     case MemberTypes.Method:
                         if (memberInfo.DeclaringType == ReflectorConsts.StringType)
                         {
@@ -254,7 +254,7 @@ namespace EasyORM.Provider.SQLite
                                         }
                                         else
                                         {
-                                            throw new Exception("不支持");
+                                            throw new Exception(" Not Supported ");
                                         }
                                     }
                                     else if (columnConverter.Parameters.Count == 2)
@@ -265,16 +265,16 @@ namespace EasyORM.Provider.SQLite
                                         }
                                         else
                                         {
-                                            throw new Exception("不支持");
+                                            throw new Exception(" Not Supported ");
                                         }
                                     }
                                     else
                                     {
-                                        throw new Exception("不支持");
+                                        throw new Exception(" Not Supported ");
                                     }
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception(" Not Supported ");
                             }
                             continue;
                         }
@@ -305,7 +305,7 @@ namespace EasyORM.Provider.SQLite
                                     converter = FormatDateConverter(columnConverter, converter, "MINUTES", num);
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception(" Not Supported ");
                             }
                             continue;
                         }
@@ -316,7 +316,7 @@ namespace EasyORM.Provider.SQLite
                                 case "Contains":
                                     if (columnConverter.IsInstanceColumn)
                                     {
-                                        throw new Exception("不支持");
+                                        throw new Exception(" Not Supported ");
                                     }
                                     var arg = (IQueryable)args[0];
                                     var type = arg.GetType();
@@ -335,7 +335,7 @@ namespace EasyORM.Provider.SQLite
 
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception(" Not Supported ");
                             }
                         }
                         else if (memberInfo.DeclaringType == ReflectorConsts.EnumerableType)
@@ -345,7 +345,7 @@ namespace EasyORM.Provider.SQLite
                                 case "Contains":
                                     if (columnConverter.IsInstanceColumn)
                                     {
-                                        throw new Exception("不支持");
+                                        throw new Exception(" Not Supported ");
                                     }
                                     var arg = args[0];
                                     var type = arg.GetType();
@@ -369,7 +369,7 @@ namespace EasyORM.Provider.SQLite
                                     converter = proccessor.Result.ToString();
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception(" Not Supported ");
                             }
                         }
                         else if (memberInfo.DeclaringType.IsGenericType)
@@ -379,7 +379,7 @@ namespace EasyORM.Provider.SQLite
                                 case "Contains":
                                     if (columnConverter.IsInstanceColumn)
                                     {
-                                        throw new Exception("不支持");
+                                        throw new Exception(" Not Supported ");
                                     }
                                     var arg = args[0];
                                     var type = memberInfo.DeclaringType;
@@ -398,16 +398,16 @@ namespace EasyORM.Provider.SQLite
 
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception(" Not Supported ");
                             }
                         }
                         else
                         {
-                            throw new Exception("不支持");
+                            throw new Exception(" Not Supported ");
                         }
                         break;
                     default:
-                        throw new Exception("不支持");
+                        throw new Exception(" Not Supported ");
                 }
             }
             return converter;

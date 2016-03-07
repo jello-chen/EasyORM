@@ -19,7 +19,7 @@ namespace EasyORM.Provider.SQLite
         }
 
         /// <summary>
-        /// 插入实体集
+        /// Insert a list
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
@@ -49,7 +49,7 @@ namespace EasyORM.Provider.SQLite
             var autoincreamentColumn = string.Empty;
             foreach (var item in _table.Columns.Values)
             {
-                if (item.ColumnType == DbUtils.ColumnType.AutoIncreament)
+                if (item.ColumnType == DbUtils.KeyColumnType.AutoIncreament)
                 {
                     autoincreamentColumn = item.Name;
                     continue;

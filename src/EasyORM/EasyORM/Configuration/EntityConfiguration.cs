@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using EasyORM.SchemaModel;
 using EasyORM.DbUtils;
 
 namespace EasyORM.Configuration
 {
     /// <summary>
-    /// 提供对实体进行配置的功能，该功能优先于通过特性配置
+    /// Entity Configuration,it takes the precedence over the attribute configuration
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class EntityConfiguration<T>
@@ -22,12 +19,12 @@ namespace EasyORM.Configuration
             _context = context;
         }
         /// <summary>
-        /// 指定该实体的主键
+        /// Specify the primary key of entity
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
         /// <param name="keySelector"></param>
         /// <returns></returns>
-        public EntityConfiguration<T> Key<TKey>(Expression<Func<T, TKey>> selector, ColumnType dataSourceType)
+        public EntityConfiguration<T> Key<TKey>(Expression<Func<T, TKey>> selector, KeyColumnType dataSourceType)
         {
             var col = Parse(selector);
             col.ColumnType = dataSourceType;
@@ -37,7 +34,7 @@ namespace EasyORM.Configuration
         }
 
         /// <summary>
-        /// 将表达式树转换成Column
+        /// Parse expression to column
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
         /// <param name="selector"></param>
@@ -55,7 +52,7 @@ namespace EasyORM.Configuration
         }
 
         /// <summary>
-        /// 返回可配置属性的对象
+        /// Get the PropertyConfiguration instance
         /// </summary>
         /// <typeparam name="TProperty"></typeparam>
         /// <param name="selector"></param>
@@ -68,7 +65,7 @@ namespace EasyORM.Configuration
         }
 
         /// <summary>
-        /// 指定表名
+        /// Specify the table name
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
@@ -80,7 +77,7 @@ namespace EasyORM.Configuration
         }
 
         /// <summary>
-        /// 指定数据库名
+        /// Specify the database
         /// </summary>
         /// <param name="db"></param>
         /// <returns></returns>

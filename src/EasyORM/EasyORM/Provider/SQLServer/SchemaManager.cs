@@ -41,7 +41,7 @@ namespace EasyORM.Provider.SQLServer
                 var typeString = typeMapper.Db2SQLMapper.GetOrDefault(column.DbType);
                 if (string.IsNullOrWhiteSpace(typeString))
                 {
-                    throw new Exception("不支持" + column.DbType.ToString() + "数据类型");
+                    throw new Exception("Not supported " + column.DbType.ToString() + " data type");
                 }
                 columnBuilder.Append(typeString);
                 if (column.MaxLength > 0)
@@ -52,7 +52,7 @@ namespace EasyORM.Provider.SQLServer
                 {
                     columnBuilder.Append(string.Format("({0},{1})", column.Precision, column.Scale));
                 }
-                if (column.ColumnType == ColumnType.AutoIncreament)
+                if (column.ColumnType == KeyColumnType.AutoIncreament)
                 {
                     columnBuilder.Append(" ");
                     columnBuilder.Append("IDENTITY(1,1)");
@@ -107,11 +107,11 @@ namespace EasyORM.Provider.SQLServer
                     column.IsKey = Convert.ToBoolean(schemaRow["IsKey"]);
                     if (Convert.ToBoolean(schemaRow["IsAutoincrement"]))
                     {
-                        column.ColumnType = ColumnType.AutoIncreament;
+                        column.ColumnType = KeyColumnType.AutoIncreament;
                     }
                     else
                     {
-                        column.ColumnType = ColumnType.None;
+                        column.ColumnType = KeyColumnType.None;
                     }
                     if (column.IsKey)
                     {
@@ -128,7 +128,7 @@ namespace EasyORM.Provider.SQLServer
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("获取所有表时出现错误，表名：" + table.Name + "，列名：" + column.Name);
+                        throw new Exception("Get all tables failed，table name：" + table.Name + "，column name：" + column.Name);
                     }
                 }
                 tables.Add(table);

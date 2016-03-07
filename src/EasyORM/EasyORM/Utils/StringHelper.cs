@@ -150,7 +150,7 @@
         }
 
         /// <summary>
-        /// 单词转复数
+        /// Convert to Plural
         /// </summary>
         /// <param name="word"></param>
         /// <returns></returns>
@@ -165,7 +165,7 @@
         }
 
         /// <summary>
-        /// 单词转单数
+        /// Convert to Singular
         /// </summary>
         /// <param name="word"></param>
         /// <returns></returns>
@@ -180,7 +180,7 @@
         }
 
         /// <summary>
-        /// 首字母变大写
+        /// Convert to Pascal
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>

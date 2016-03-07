@@ -2,11 +2,8 @@
 using EasyORM.Utils;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EasyORM.Logging
 {
@@ -16,7 +13,7 @@ namespace EasyORM.Logging
     public class LogWriterFactory
     {
         /// <summary>
-        /// 根据配置文件创建日志类
+        /// Create log instance by configuration
         /// </summary>
         /// <returns></returns>
         public static IList<ILogWriter> CreateLogWriter()
@@ -33,7 +30,7 @@ namespace EasyORM.Logging
                 {
                     if (string.IsNullOrWhiteSpace(item.Type))
                     {
-                        throw new Exception("EasyORM配置文件错误，日志类类型名不能为空");
+                        throw new Exception("EasyORM log configurates failed");
                     }
                     var types = item.Type.Split(',');
                     Type type = null;
@@ -47,7 +44,7 @@ namespace EasyORM.Logging
                     }
                     if (type == null)
                     {
-                        throw new Exception("未找到日志类：" + item.Type);
+                        throw new Exception("Not found the log class：" + item.Type);
                     }
                     return (ILogWriter)Activator.CreateInstance(type);
                 }));

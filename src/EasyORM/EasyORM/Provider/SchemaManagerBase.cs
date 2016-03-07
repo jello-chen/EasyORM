@@ -11,7 +11,7 @@ using EasyORM.SchemaModel;
 namespace EasyORM.Provider
 {
     /// <summary>
-    /// 表结构管理器基类
+    /// Table Schema Manager Base
     /// </summary>
     public abstract class SchemaManagerBase : SqlExecutorBase
     {
@@ -22,7 +22,7 @@ namespace EasyORM.Provider
         }
 
         /// <summary>
-        /// 数据库是否已有表
+        /// Indicates whether the database has table
         /// </summary>
         /// <returns></returns>
         public bool HasTable()
@@ -43,7 +43,7 @@ namespace EasyORM.Provider
         public abstract List<Table> GetTables();
 
         /// <summary>
-        /// 获取指定表及列
+        /// Gets a Table
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>

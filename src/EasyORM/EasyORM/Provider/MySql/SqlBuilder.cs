@@ -217,13 +217,13 @@ namespace EasyORM.Provider.MySql
                                     unit = "SECOND";
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception("Not supported timespan type on member");
                             }
                             converter = FormatConverter(columnConverter.IsInstanceColumn, converter, "TIMESTAMPDIFF(" + unit + ",{1},{0})", paramName);
                             _result.Parameters.Add(paramName, args[0]);
                             continue;
                         }
-                        throw new Exception("不支持");
+                        throw new Exception("Not supported member type");
                     case MemberTypes.Method:
                         if (memberInfo.DeclaringType == ReflectorConsts.StringType)
                         {
@@ -246,7 +246,7 @@ namespace EasyORM.Provider.MySql
                                         }
                                         else
                                         {
-                                            throw new Exception("不支持");
+                                            throw new Exception("Not supported");
                                         }
                                     }
                                     else if (columnConverter.Parameters.Count == 2)
@@ -257,16 +257,16 @@ namespace EasyORM.Provider.MySql
                                         }
                                         else
                                         {
-                                            throw new Exception("不支持");
+                                            throw new Exception("Not supported");
                                         }
                                     }
                                     else
                                     {
-                                        throw new Exception("不支持");
+                                        throw new Exception("Not supported");
                                     }
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception("Not supported");
                             }
                             continue;
                         }
@@ -304,7 +304,7 @@ namespace EasyORM.Provider.MySql
                                     _result.Parameters.Add(paramName, args[0]);
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception("Not supported");
                             }
                             continue;
                         }
@@ -315,7 +315,7 @@ namespace EasyORM.Provider.MySql
                                 case "Contains":
                                     if (columnConverter.IsInstanceColumn)
                                     {
-                                        throw new Exception("不支持");
+                                        throw new Exception("Not supported");
                                     }
                                     var arg = (IQueryable)args[0];
                                     var type = arg.GetType();
@@ -334,7 +334,7 @@ namespace EasyORM.Provider.MySql
 
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception("Not supported");
                             }
                         }
                         else if (memberInfo.DeclaringType == ReflectorConsts.EnumerableType)
@@ -344,7 +344,7 @@ namespace EasyORM.Provider.MySql
                                 case "Contains":
                                     if (columnConverter.IsInstanceColumn)
                                     {
-                                        throw new Exception("不支持");
+                                        throw new Exception("Not supported");
                                     }
                                     var arg = args[0];
                                     var type = arg.GetType();
@@ -368,7 +368,7 @@ namespace EasyORM.Provider.MySql
                                     converter = proccessor.Result.ToString();
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception("Not supported");
                             }
                         }
                         else if (memberInfo.DeclaringType.IsGenericType)
@@ -378,7 +378,7 @@ namespace EasyORM.Provider.MySql
                                 case "Contains":
                                     if (columnConverter.IsInstanceColumn)
                                     {
-                                        throw new Exception("不支持");
+                                        throw new Exception("Not supported");
                                     }
                                     var arg = args[0];
                                     var type = memberInfo.DeclaringType;
@@ -397,16 +397,16 @@ namespace EasyORM.Provider.MySql
 
                                     break;
                                 default:
-                                    throw new Exception("不支持");
+                                    throw new Exception("Not supported");
                             }
                         }
                         else
                         {
-                            throw new Exception("不支持");
+                            throw new Exception("Not supported");
                         }
                         break;
                     default:
-                        throw new Exception("不支持");
+                        throw new Exception("Not supported");
                 }
             }
             return converter;

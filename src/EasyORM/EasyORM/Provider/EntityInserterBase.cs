@@ -9,7 +9,7 @@ using EasyORM.Provider.SQLite;
 namespace EasyORM.Provider
 {
     /// <summary>
-    /// 提供插入实体集的功能
+    /// Entity Inserter Base
     /// </summary>
     public abstract class EntityInserterBase
     {
@@ -25,7 +25,7 @@ namespace EasyORM.Provider
             _sqlBuilder = provider.CreateSqlBuilderFactory().CreateSqlBuilder();
         }
         /// <summary>
-        /// 插入指定实体集到数据库
+        /// Insert a list
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>

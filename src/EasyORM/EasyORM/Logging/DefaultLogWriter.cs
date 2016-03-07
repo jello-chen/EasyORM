@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace EasyORM.Logging
 {
     /// <summary>
-    /// 默认日志类
+    /// Default Logger
     /// </summary>
     internal class DefaultLogWriter : ILogWriter
     {
@@ -41,22 +41,22 @@ namespace EasyORM.Logging
                 using (var sr = File.AppendText(filePath))
                 {
                     sr.WriteLine(DateTime.Now.ToString());
-                    sr.WriteLine("表达式：");
+                    sr.WriteLine("Expression：");
                     sr.WriteLine("\t" + expression);
                     sr.WriteLine("SQL：");
                     sr.WriteLine("\t" + sql);
-                    sr.WriteLine("翻译用时：");
-                    sr.WriteLine("\t" + tranlsateTime.ToString() + "毫秒");
+                    sr.WriteLine("Time consuming on translation：");
+                    sr.WriteLine("\t" + tranlsateTime.ToString() + "ms");
                     if (parameters != null && parameters.Any())
                     {
-                        sr.WriteLine("参数：");
+                        sr.WriteLine("Parameters：");
                         foreach (var item in parameters.Keys)
                         {
                             sr.WriteLine("\t" + string.Format("{0}:{1}", item, Convert.ToString(parameters[item])));
                         }
                     }
-                    sr.WriteLine("执行用时：");
-                    sr.WriteLine("\t" + executeTime + "毫秒");
+                    sr.WriteLine("Time consuming on execution：");
+                    sr.WriteLine("\t" + executeTime + "ms");
                     sr.WriteLine();
                     sr.Flush();
                 }

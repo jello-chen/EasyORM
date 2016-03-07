@@ -145,12 +145,12 @@ namespace EasyORM.Provider.Parser
                 _memberInfoStack.Push(node.Member);
                 if (node.Expression == null)
                 {
-                    //静态成员调用
-                    throw new NotSupportedException("Select子句中不允许调用方法");
+                    //call static member
+                    throw new NotSupportedException("Can not allow to call method in select sentense ");
                 }
                 else if (node.Expression.NodeType == ExpressionType.Constant)
                 {
-                    //实例成员调用
+                    //call instence member
                     //MemberExpressionType = MemberExpressionType.Object;
                     return node;
                 }
@@ -177,7 +177,7 @@ namespace EasyORM.Provider.Parser
 
             protected override Expression VisitConstant(ConstantExpression node)
             {
-                throw new NotSupportedException("Select子句中不允许直接写常量");
+                throw new NotSupportedException("Can not allow to assign value directly in select sentense");
             }
 
             string GetConverter()
@@ -188,7 +188,6 @@ namespace EasyORM.Provider.Parser
 
                     if (propertyInfo.DeclaringType.FullName.StartsWith("System.Nullable") && propertyInfo.DeclaringType.Assembly.GlobalAssemblyCache)
                     {
-                        //可空属性的Value访问，忽略不管
                         if (_memberInfoStack.Count <= 0)
                         {
                             return null;
@@ -197,7 +196,7 @@ namespace EasyORM.Provider.Parser
                     }
                     if (propertyInfo.DeclaringType != typeof(DateTime) || propertyInfo.Name != "Date")
                     {
-                        throw new Exception("除x=>x.Time.Date以外，不支持其他的");
+                        throw new Exception("Not support except 'x=>x.Time.Date' ");
                     }
                     return "CONVERT(DATE,{0},211)";
                 }
@@ -220,7 +219,7 @@ namespace EasyORM.Provider.Parser
                 //MemberExpressionType = MemberExpressionType.Column;
                 if (EntityConfigurationManager.IsEntity(node.Type))
                 {
-                    //弹出第一个参数，一般是列
+                    //Pop the first parameter,it is usually column
                     var table = GetTable(node.Type);
                     var _memberInfo = _memberInfoStack.Pop();
                     if (table.Columns.GetOrDefault(_memberInfo.Name) == null)

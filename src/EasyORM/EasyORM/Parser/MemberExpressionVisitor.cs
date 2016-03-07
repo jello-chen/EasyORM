@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 namespace EasyORM.Provider.Parser
 {
     /// <summary>
-    /// 对访问成员方法或属性的表达式进行分析
+    /// Expression Visitor for Member
     /// </summary>
     public class MemberExpressionVisitor : ExpressionVisitorBase
     {

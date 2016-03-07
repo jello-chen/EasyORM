@@ -16,7 +16,7 @@ namespace EasyORM
         static object _tableLocker = new object();
         static Type _compilerGeneratedAttribute = typeof(CompilerGeneratedAttribute);
         /// <summary>
-        /// 根据名称生成随机别名
+        /// Create allias by name provided
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -39,10 +39,10 @@ namespace EasyORM
         }
 
         /// <summary>
-        /// 检查给定的字符串是否符合c#变量名标准
+        /// Check whether the identifier is conforming to the C# specification
         /// </summary>
         /// <returns></returns>
-        public static bool IsGoodIdentifier(string identifier)
+        public static bool IsStandardIdentifier(string identifier)
         {
             if (string.IsNullOrWhiteSpace(identifier))
             {
@@ -52,13 +52,13 @@ namespace EasyORM
         }
 
         /// <summary>
-        /// 获取规范化后的标识符
+        /// Get the standard identifier
         /// </summary>
         /// <param name="identifier"></param>
         /// <returns></returns>
-        public static string GetGoodIdentifier(string identifier)
+        public static string GetStandardIdentifier(string identifier)
         {
-            if (IsGoodIdentifier(identifier))
+            if (IsStandardIdentifier(identifier))
             {
                 return identifier;
             }
@@ -74,13 +74,13 @@ namespace EasyORM
         }
 
         /// <summary>
-        /// 获取规范化后的表名
+        /// Get a standard table name
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public static string GetGoodTableName(string tableName)
+        public static string GetStandardTableName(string tableName)
         {
-            tableName = GetGoodIdentifier(tableName);
+            tableName = GetStandardIdentifier(tableName);
             if (tableName.StartsWith("_") && tableName.Length >= 2 && !char.IsNumber(tableName[1]))
             {
                 tableName = tableName.Substring(1);
@@ -94,13 +94,13 @@ namespace EasyORM
         }
 
         /// <summary>
-        /// 获取规范化后的列名
+        /// Get a standard column name
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
         public static string GetGoodColumnName(string columnName)
         {
-            columnName = GetGoodIdentifier(columnName);
+            columnName = GetStandardIdentifier(columnName);
             columnName = columnName.Replace("_", "");
             return StringHelper.ToPascal(columnName);
         }

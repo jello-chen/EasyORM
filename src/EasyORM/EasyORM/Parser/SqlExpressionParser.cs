@@ -16,7 +16,7 @@ namespace EasyORM.Provider.Parser
             _dataContext = context;
         }
         /// <summary>
-        /// 将给定的表结构信息转换成完整表名
+        /// Get a full table name
         /// </summary>
         /// <param name="table"></param>
         /// <returns></returns>
@@ -27,7 +27,7 @@ namespace EasyORM.Provider.Parser
             return tableName;
         }
         /// <summary>
-        /// 将给定的表结构信息转换成完整表名
+        /// Get a full table name
         /// </summary>
         /// <param name="table"></param>
         /// <returns></returns>
@@ -152,10 +152,10 @@ namespace EasyORM.Provider.Parser
             }
             if (_skip != -1 && _take != -1 && !_sortExpressions.Any())
             {
-                throw new Exception("分页必须进行排序");
+                throw new Exception("Paging must be sorted");
             }
 
-            #region 解析Join子句
+            #region Parse Join
             foreach (MethodCallExpression node in _joinExpressions)
             {
                 VisitJoinExpression(node);
@@ -163,7 +163,7 @@ namespace EasyORM.Provider.Parser
             }
             #endregion
 
-            #region 解析Select子句
+            #region Parse Select
             if (_selectExpression != null)
             {
                 var unary = _selectExpression as UnaryExpression;
@@ -171,7 +171,7 @@ namespace EasyORM.Provider.Parser
                 //var newExp = lambdaExp.Body as NewExpression;
                 //if (newExp == null)
                 //{
-                //    throw new NotSupportedException("Select子句中只能使用new表达式");
+                //    throw new NotSupportedException("It must be new expression in select sentense");
                 //}
                 VisitSelectExpression(lambdaExp.Body);
             }
@@ -182,7 +182,7 @@ namespace EasyORM.Provider.Parser
             #endregion
 
 
-            #region 解析Where子句
+            #region Parse Where
             foreach (MethodCallExpression node in _whereExpressions)
             {
                 var unary = node.Arguments[1] as UnaryExpression;
@@ -203,21 +203,21 @@ namespace EasyORM.Provider.Parser
             }
             #endregion
 
-            #region 解析Lock子句
+            #region Parse Lock
             foreach (var nolockExpression in _nolockExpressions)
             {
                 VisitNoLockExpression(nolockExpression);
             }
             #endregion
 
-            #region 解析Sum、Avg等子句
+            #region Parse Sum、Avg
             foreach (var aggreationExpression in _aggregationExpressions)
             {
                 VisitAggreationExpression(aggreationExpression);
             }
             #endregion
 
-            #region 解析Order By子句
+            #region Parse Order By
             foreach (var sortExpression in _sortExpressions)
             {
                 VisitSortExpression(sortExpression);
@@ -237,7 +237,7 @@ namespace EasyORM.Provider.Parser
             visitor.Visit(updateExpression);
             if (visitor.Token.Type != TokenType.Object)
             {
-                throw new NotSupportedException("不支持");
+                throw new NotSupportedException("Not support the type");
             }
             UpdateResult = (Dictionary<string, object>)visitor.Token.Object;
         }
@@ -262,7 +262,7 @@ namespace EasyORM.Provider.Parser
                 visitor.Visit(aggreationExpression.Value);
                 if (visitor.Token.Type != TokenType.Column)
                 {
-                    throw new Exception("只能针对列进行聚合操作");
+                    throw new Exception("It must aggregate on column");
                 }
                 _aggregationColumns.Add(aggreationExpression.Key, visitor.Token.Column);
             }
@@ -376,7 +376,7 @@ namespace EasyORM.Provider.Parser
                         _updateExpression = node.Arguments[1];
                         break;
                     default:
-                        throw new NotSupportedException("未支持的方法：" + node.Method.Name);
+                        throw new NotSupportedException("Not supported method：" + node.Method.Name);
                 }
                 var call = node.Arguments[0];
                 if (call.NodeType == ExpressionType.Call)

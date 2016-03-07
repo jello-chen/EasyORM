@@ -10,16 +10,16 @@ namespace EasyORM.Provider
     public interface ITypeMapper
     {
         /// <summary>
-        /// 存储从<seealso cref="System.Type"/>到<seealso cref="System.Data.DbType"/>的映射
+        /// Map <seealso cref="System.Type"/> to <seealso cref="System.Data.DbType"/>
         /// </summary>
         Dictionary<Type, DbType> Net2DbMapper { get; }
         /// <summary>
-        /// 存储从<seealso cref="System.Data.DbType"/>到<seealso cref="System.Type"/>映射
+        /// Map <seealso cref="System.Data.DbType"/> to <seealso cref="System.Type"/>
         /// </summary>
         Dictionary<DbType, Type> Db2NetMapper { get; }
 
         /// <summary>
-        /// 存储从<seealso cref="System.Data.DbType"/>到SQL字符串的映射
+        /// Map <seealso cref="System.Data.DbType"/> to string
         /// </summary>
         Dictionary<DbType, string> Db2SQLMapper { get; }
     }

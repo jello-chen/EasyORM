@@ -268,7 +268,7 @@ namespace EasyORM.Provider.Parser
                         }
                         else
                         {
-                            throw new Exception("不支持");
+                            throw new Exception("Not support the type");
                         }
                     case TokenType.Condition:
                         return Token.Create(new Condition()
@@ -336,7 +336,7 @@ namespace EasyORM.Provider.Parser
                         {
                             return Token.Create(leftResult.Equals(rightResult));
                         }
-                        #region 比大小
+                        #region Comparsion
                         if (leftResult.Object is DateTime || leftResult.Object is DateTime?)
                         {
                             var left = Convert.ToDateTime(leftResult.Object);
@@ -527,11 +527,8 @@ namespace EasyORM.Provider.Parser
                 }
             }
 
-
-
-            #region 处理And Or的逻辑表达式
             /// <summary>
-            /// 处理And Or的逻辑表达式
+            /// Parse the logical expression
             /// </summary>
             /// <param name="node"></param>
             /// <returns></returns>
@@ -547,26 +544,19 @@ namespace EasyORM.Provider.Parser
                 {
                     Token = leftResult;
                     var r = (bool)leftResult.Object;
-                    //左支结果为布尔
                     if (r)
                     {
-                        //左支结果为真
                         if (node.NodeType == ExpressionType.OrElse)
                         {
-                            //逻辑关系为或，整个表达式丢弃
                             return Token.CreateNull();
                         }
-                        //逻辑关系为与，左支可丢弃，可计算右支
                     }
                     else
                     {
-                        //左支结果为假
                         if (node.NodeType == ExpressionType.AndAlso)
                         {
-                            //逻辑关系为与，整个表达式为假
                             return Token.CreateNull();
                         }
-                        //逻辑关系为或，左支可丢弃，可计算右支
                     }
                 }
                 rightResult = VisitBinaryNode(node.Right);
@@ -724,7 +714,6 @@ namespace EasyORM.Provider.Parser
                 }
                 throw new Exception();
             }
-            #endregion
 
             private CompareType SelectLogicCompareType(ExpressionType expressionType)
             {

@@ -13,7 +13,7 @@ using EasyORM.Configuration;
 namespace EasyORM.Provider
 {
     /// <summary>
-    /// 提供者抽象基类
+    /// Base Provider
     /// </summary>
     public abstract class ProviderBase
     {
@@ -22,7 +22,7 @@ namespace EasyORM.Provider
         protected DataContext _context;
 
         /// <summary>
-        /// 当前数据库类型
+        /// Get the current database type
         /// </summary>
         public DatabaseTypes DatabaseType
         {
@@ -35,14 +35,11 @@ namespace EasyORM.Provider
         }
 
         /// <summary>
-        /// 获取一个用于创建数据库表的对象
+        /// Get a schema manager that is able to create table
         /// </summary>
         /// <returns></returns>
         public abstract SchemaManagerBase CreateSchemaManager();
 
-        /// <summary>
-        /// 构造方法
-        /// </summary>
         public ProviderBase(DataContext context)
         {
             _context = context;
@@ -50,7 +47,7 @@ namespace EasyORM.Provider
         }
 
         /// <summary>
-        /// 创建一个新的分析器
+        /// Create a parser
         /// </summary>
         /// <returns></returns>
         public ParserBase CreateParser()
@@ -59,7 +56,7 @@ namespace EasyORM.Provider
         }
 
         /// <summary>
-        /// 创建一个新的SQL语句执行器
+        /// Create a sql executor
         /// </summary>
         /// <returns></returns>
         public virtual SqlExecutorBase CreateSqlExecutor()
@@ -68,13 +65,13 @@ namespace EasyORM.Provider
         }
 
         /// <summary>
-        /// 创建一个插入、删除、更新实体的对象
+        /// Create a entity operator that is able to insert,update and delete
         /// </summary>
         /// <returns></returns>
         public abstract IEntityOperator CreateEntityOperator();
 
         /// <summary>
-        /// 创建一个SqlBuilderFactory，即SQL语句生成对象的工厂
+        /// Create a sql builder factory that is able to build sql 
         /// </summary>
         /// <returns></returns>
         public BuilderFactory CreateSqlBuilderFactory()

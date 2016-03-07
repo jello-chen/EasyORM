@@ -12,7 +12,7 @@ using EasyORM.Utils;
 namespace EasyORM.Provider.Parser
 {
     /// <summary>
-    /// 对访问成员属性的表达式进行分析
+    /// Exprssion visitor for property or field
     /// </summary>
     public class PropertyFieldExpressionVisitor : ExpressionVisitorBase
     {
@@ -49,7 +49,7 @@ namespace EasyORM.Provider.Parser
                 visitor.Visit(binding.Expression);
                 if (visitor.Token.Type != TokenType.Object)
                 {
-                    throw new NotSupportedException("不支持");
+                    throw new NotSupportedException("Not supported the type");
                 }
                 results.Add(binding.Member.Name, visitor.Token.Object);
             }
@@ -119,7 +119,6 @@ namespace EasyORM.Provider.Parser
         {
             if (node.Expression == null)
             {
-                //静态属性访问，已到根节点
                 var value = GetValue(node, null);
                 while (_memberInfos.Count > 0)
                 {
@@ -234,7 +233,7 @@ namespace EasyORM.Provider.Parser
             var column = new Column();
             if (EntityConfigurationManager.IsEntity(node.Type))
             {
-                //弹出第一个参数，一般是列
+                //Pop the first parameter, it is usually column
                 var table = GetTable(node.Type);
                 var _memberInfo = ((MemberExpression)_memberInfos.Pop()).Member;
                 column.DataType = ((PropertyInfo)_memberInfo).PropertyType;

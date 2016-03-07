@@ -10,7 +10,7 @@ using EasyORM.DynamicObject;
 namespace EasyORM.Provider
 {
     /// <summary>
-    /// SqlBuilder工厂类
+    /// SqlBuilder Factory
     /// </summary>
     public class BuilderFactory
     {
@@ -24,7 +24,7 @@ namespace EasyORM.Provider
         static List<Type> _providerTypes;
 
         /// <summary>
-        /// 根据当前数据库创建一个SqlBuilderBase类
+        /// Creates a SqlBuilderBase instance
         /// </summary>
         /// <returns></returns>
         public SqlBuilderBase CreateSqlBuilder()
@@ -37,12 +37,12 @@ namespace EasyORM.Provider
             var types = _providerTypes.Where(x => x.FullName.EndsWith(typeName));
             if (types.Count() > 1)
             {
-                throw new NotSupportedException("找到了多个包含" + typeName + "的提供者类");
+                throw new InvalidOperationException("may be a uncertain provider");
             }
             var type = types.FirstOrDefault();
             if (type == null)
             {
-                throw new NotSupportedException("未找到提供者类：" + typeName);
+                throw new InvalidOperationException("Not found the provider：" + typeName);
             }
             return (SqlBuilderBase)ExpressionReflector.CreateInstance(type, ObjectPropertyConvertType.Cast, _context);
         }

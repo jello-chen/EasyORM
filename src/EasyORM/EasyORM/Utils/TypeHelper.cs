@@ -9,7 +9,7 @@ namespace EasyORM.Utils
     public class TypeHelper
     {
         /// <summary>
-        /// 如果是可空类型，则获取真实类型
+        /// Returns the underlying type argument of the specified nullable type
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -23,7 +23,7 @@ namespace EasyORM.Utils
         }
 
         /// <summary>
-        /// 判断是否可空类型
+        /// Indicates whether the type is nullable
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -45,7 +45,7 @@ namespace EasyORM.Utils
         }
 
         /// <summary>
-        /// 判断是否编译器生成的类型
+        /// Indicates whether the type is generated from compiler
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -55,12 +55,13 @@ namespace EasyORM.Utils
         }
 
         /// <summary>
-        /// 是否基元类型
+        /// Indicates whether property type is primitive type
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
         public static bool IsValueType(Type type)
         {
+            int? i = 1;
             type = GetUnderlyingType(type);
             if (type.IsPrimitive)
             {
@@ -74,7 +75,7 @@ namespace EasyORM.Utils
         }
 
         /// <summary>
-        /// 是否枚举类型
+        /// Indicates whether property type is enum
         /// </summary>
         /// <param name="propertyType"></param>
         /// <returns></returns>

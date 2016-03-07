@@ -12,7 +12,7 @@ using EasyORM.SchemaModel;
 namespace EasyORM.Provider.SQLServer
 {
     /// <summary>
-    /// 当实体没有任何主键时，使用该类进行持久化到数据库
+    /// None Key Entity Inserter
     /// </summary>
     public class EntityNoneInserter : EntityInserterBase
     {
@@ -33,7 +33,7 @@ namespace EasyORM.Provider.SQLServer
             var getters = ExpressionReflector.GetGetters(type);
             if (list.Count <= 10)
             {
-                #region 使用Insert语句插入
+                #region Insert by using insert sentense
                 var insertStart = "insert into {0}({1}) values{2}";
                 var tableName = string.Empty;
                 if (!string.IsNullOrWhiteSpace(_table.DataBase))
@@ -67,7 +67,7 @@ namespace EasyORM.Provider.SQLServer
             }
             else
             {
-                #region 使用SqlBulkCopy插入
+                #region Insert by using SqlBulkCopy
                 var sqlBulkCopy = new SqlBulkCopy(_dataContext.DatabaseConfig.ConnectionString);
                 sqlBulkCopy.DestinationTableName = "dbo.[" + _table.Name + "]";
                 sqlBulkCopy.BulkCopyTimeout = 300;

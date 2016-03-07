@@ -1,18 +1,7 @@
-﻿using EasyORM.Provider.SQLServer;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using EasyORM.DynamicObject;
 using EasyORM.Utils;
-using EasyORM.DbUtils.DataAnnotations;
-using EasyORM.SchemaModel;
-using EasyORM.Configuration;
 using EasyORM.DbUtils;
 
 namespace EasyORM.Provider.SQLite
@@ -23,7 +12,7 @@ namespace EasyORM.Provider.SQLite
         {
 
         }
-        #region 批量插入
+        #region Bulk insert
         int IEntityOperator.InsertEntities(ArrayList list)
         {
             if(list.Count<=0)
@@ -31,17 +20,17 @@ namespace EasyORM.Provider.SQLite
                 return 0;
             }
             var table = _entityCfgManager.GetTable(list[0].GetType());
-            var dataSourceType = EntityOperatorUtils.GetDataSourceType(table);
+            var dataSourceType = EntityOperatorUtils.GetKeyColumnType(table);
             EntityInserterBase inserter = null;
             switch (dataSourceType)
             {
-                case ColumnType.AutoIncreament:
+                case KeyColumnType.AutoIncreament:
                     inserter = new EntityIdentityInserter(_context, table);
                     break;
-                case ColumnType.None:
+                case KeyColumnType.None:
                     inserter = new EntityNoneInserter(_context, table);
                     break;
-                case ColumnType.Sequence:
+                case KeyColumnType.Sequence:
                     inserter = new EntitySeqenceInserter(_context, table);
                     break;
             }
@@ -55,7 +44,7 @@ namespace EasyORM.Provider.SQLite
             var keyValue = values.GetOrDefault(keyColumn.Name);
             if (keyValue == null)
             {
-                throw new InvalidOperationException("字典未传入主键");
+                throw new InvalidOperationException("not found the key");
             }
             var updateSql = "UPDATE {0} SET {1} WHERE {2}";
             var tableName = _sqlBuilder.GetTableName(table);

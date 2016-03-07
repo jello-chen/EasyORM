@@ -23,7 +23,7 @@ namespace EasyORM.Provider.MySql
         }
 
         /// <summary>
-        /// 插入实体集
+        /// Insert a list
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
@@ -53,7 +53,7 @@ namespace EasyORM.Provider.MySql
             var autoincreamentColumn = string.Empty;
             foreach (var item in _table.Columns.Values)
             {
-                if (item.ColumnType == ColumnType.AutoIncreament)
+                if (item.ColumnType == KeyColumnType.AutoIncreament)
                 {
                     autoincreamentColumn = item.Name;
                     continue;

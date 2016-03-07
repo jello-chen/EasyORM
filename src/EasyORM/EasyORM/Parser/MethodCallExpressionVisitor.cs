@@ -8,7 +8,7 @@ using EasyORM.Utils;
 namespace EasyORM.Provider.Parser
 {
     /// <summary>
-    /// 对访问成员方法的表达式进行分析
+    /// Expression visitor for calling method
     /// </summary>
     public class MethodCallExpressionVisitor : ExpressionVisitorBase
     {
@@ -72,7 +72,7 @@ namespace EasyORM.Provider.Parser
             }
             if (node.Object == null)
             {
-                //静态方法调用var col = (Token)body.Result;
+                //Invoke static method:var col = (Token)body.Result;
                 var method = node.Method;
                 if (_isColumn)
                 {
@@ -123,7 +123,6 @@ namespace EasyORM.Provider.Parser
                 body.Visit(node.Object);
                 if (body.Token.Type == TokenType.Column && !_isColumn)
                 {
-                    //实例对象是列，参数不是列
                     Token = body.Token;
                     var method = node.Method;
                     var argObjects = args.Select(x => x.Object);

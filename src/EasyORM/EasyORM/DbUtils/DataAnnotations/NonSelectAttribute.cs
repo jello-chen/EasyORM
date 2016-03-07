@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace EasyORM.DbUtils.DataAnnotations
 {
     /// <summary>
-    /// 指示该字段不要加入到select语句中
+    /// Indicates the field don't contain in select sentense
     /// </summary>
     public class NonSelectAttribute : Attribute
     {

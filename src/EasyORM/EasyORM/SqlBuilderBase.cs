@@ -424,7 +424,7 @@ namespace EasyORM
             }
             else
             {
-                throw new NotSupportedException("未支持的Join类型：" + joinType);
+                throw new NotSupportedException("Not supported join type：" + joinType);
             }
         }
 

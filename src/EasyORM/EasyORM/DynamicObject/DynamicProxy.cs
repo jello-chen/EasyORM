@@ -11,7 +11,7 @@ namespace EasyORM.DynamicObject
 {
     public class DynamicProxy
     {
-        private const string DynamicAssemblyName = "DynamicAssembly"; //动态程序集名称
+        private const string DynamicAssemblyName = "DynamicAssembly"; 
         private const string DynamicModuleName = "DynamicAssemblyModule";
         private const string ProxyClassNameFormater = "{0}_Proxy";
         private static IDictionary<Type, IDictionary<string, Action<object, object[]>>> _propertyDirectSetCache = new Dictionary<Type, IDictionary<string, Action<object, object[]>>>();
@@ -36,13 +36,12 @@ namespace EasyORM.DynamicObject
             MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.CheckAccessOnOverride | MethodAttributes.HideBySig | MethodAttributes.Virtual;
 
         /// <summary>
-        /// 创建动态程序集,返回AssemblyBuilder
+        /// Creates dynamic assembly,returns AssemblyBuilder
         /// </summary>
         /// <param name="isSavaDll"></param>
         /// <returns></returns>
         private static AssemblyBuilder DefineDynamicAssembly(bool isSavaDll = false)
         {
-            //动态创建程序集
             AssemblyName DemoName = new AssemblyName(DynamicAssemblyName);
             AssemblyBuilderAccess assemblyBuilderAccess = isSavaDll
                 ? AssemblyBuilderAccess.RunAndSave
@@ -53,7 +52,7 @@ namespace EasyORM.DynamicObject
         }
 
         /// <summary>
-        /// 创建动态模块,返回ModuleBuilder
+        /// Creates dynamic module,returns ModuleBuilder
         /// </summary>
         /// <returns>ModuleBuilder</returns>
         private static ModuleBuilder DefineDynamicModule(AssemblyBuilder dynamicAssembly, bool save)
@@ -77,37 +76,37 @@ namespace EasyORM.DynamicObject
             save=true;
 #endif
             AssemblyBuilder assemblyBuilder = DefineDynamicAssembly(save);
-            //动态创建模块
+
             ModuleBuilder moduleBuilder = DefineDynamicModule(assemblyBuilder, save);
             string proxyClassName = string.Format(ProxyClassNameFormater + type.GetHashCode().ToString(), type.Name);
-            //动态创建类代理
+
             TypeBuilder typeBuilderProxy = moduleBuilder.DefineType(proxyClassName, TypeAttributes.Public, type);
             CustomAttributeBuilder cab =
                 new CustomAttributeBuilder(typeof(SerializableAttribute).GetConstructor(new Type[0]), new object[0]);
             typeBuilderProxy.SetCustomAttribute(cab);
             typeBuilderProxy.AddInterfaceImplementation(typeof(IGetUpdatedValues));
-            //定义一个变量存放属性变更名
+            
+            //Defines a variable to store the modified property name
             FieldBuilder fbModifiedPropertyNames = typeBuilderProxy.DefineField(ModifiedPropertyNamesFieldName,
                 ModifiedPropertyNamesType, FieldAttributes.Public);
             ConstructorBuilder constructorBuilder = typeBuilderProxy.DefineConstructor(MethodAttributes.Public,
                 CallingConventions.Standard, null);
             ILGenerator ilgCtor = constructorBuilder.GetILGenerator();
-            ilgCtor.Emit(OpCodes.Ldarg_0); //加载当前类
-            ilgCtor.Emit(OpCodes.Newobj, modifiedPropertyTypeConstructor); //实例化对象入栈
-            ilgCtor.Emit(OpCodes.Stfld, fbModifiedPropertyNames); //设置fbModifiedPropertyNames值,为刚入栈的实例化对象
-            ilgCtor.Emit(OpCodes.Ret); //返回
+            ilgCtor.Emit(OpCodes.Ldarg_0); //load the current class
+            ilgCtor.Emit(OpCodes.Newobj, modifiedPropertyTypeConstructor); //push stack
+            ilgCtor.Emit(OpCodes.Stfld, fbModifiedPropertyNames); //assign fbModifiedPropertyNames value
+            ilgCtor.Emit(OpCodes.Ret); //return
 
-            //获取被代理对象的所有属性,循环属性进行重写
+            //get all properties of proxy and overwrite the get/set method of property
             PropertyInfo[] properties = type.GetProperties();
             foreach (PropertyInfo propertyInfo in properties)
             {
                 string propertyName = propertyInfo.Name;
                 Type typePepropertyInfo = propertyInfo.PropertyType;
-                //动态创建字段和属性
+
                 PropertyBuilder propertyBuilder = typeBuilderProxy.DefineProperty(propertyName,
                     PropertyAttributes.SpecialName, typePepropertyInfo, null);
 
-                //重写属性的Get Set方法
                 var methodGet = typeBuilderProxy.DefineMethod("get_" + propertyName, GetSetMethodAttributes,
                     typePepropertyInfo, Type.EmptyTypes);
                 var methodSet = typeBuilderProxy.DefineMethod("set_" + propertyName, GetSetMethodAttributes, null,
@@ -115,7 +114,7 @@ namespace EasyORM.DynamicObject
                 var methodDirectSet = typeBuilderProxy.DefineMethod("directSet_" + propertyName, GetSetMethodAttributes, null,
                     new Type[] { typePepropertyInfo });
                 //il of get method
-                #region Get方法
+                #region Get Method
                 var ilGetMethod = methodGet.GetILGenerator();
                 ilGetMethod.DeclareLocal(propertyInfo.PropertyType);
                 ilGetMethod.Emit(OpCodes.Ldarg_0);
@@ -134,20 +133,20 @@ namespace EasyORM.DynamicObject
 
                 ilSetMethod.Emit(OpCodes.Ldarg_0);
                 ilSetMethod.Emit(OpCodes.Ldfld, fbModifiedPropertyNames);
-                ilSetMethod.Emit(OpCodes.Ldstr, propertyInfo.Name);//给字典准备第一个参数
-                ilSetMethod.Emit(OpCodes.Callvirt, removeMethod);//加到字典
+                ilSetMethod.Emit(OpCodes.Ldstr, propertyInfo.Name);
+                ilSetMethod.Emit(OpCodes.Callvirt, removeMethod);
                 ilSetMethod.Emit(OpCodes.Pop);
 
 
                 ilSetMethod.Emit(OpCodes.Ldarg_0);
                 ilSetMethod.Emit(OpCodes.Ldfld, fbModifiedPropertyNames);
-                ilSetMethod.Emit(OpCodes.Ldstr, propertyInfo.Name);//给字典准备第一个参数
-                ilSetMethod.Emit(OpCodes.Ldarg_1);//给字典准备第二个参数
+                ilSetMethod.Emit(OpCodes.Ldstr, propertyInfo.Name);
+                ilSetMethod.Emit(OpCodes.Ldarg_1);
                 if (propertyInfo.PropertyType.IsValueType)
                 {
                     ilSetMethod.Emit(OpCodes.Box, propertyInfo.PropertyType);
                 }
-                ilSetMethod.Emit(OpCodes.Callvirt, addMethod);//加到字典
+                ilSetMethod.Emit(OpCodes.Callvirt, addMethod);
                 ilSetMethod.Emit(OpCodes.Nop);
                 ilSetMethod.Emit(OpCodes.Ret);
 
@@ -157,11 +156,10 @@ namespace EasyORM.DynamicObject
                 ilDirectSetMehotd.Emit(OpCodes.Call, propertyInfo.GetSetMethod());
                 ilDirectSetMehotd.Emit(OpCodes.Ret);
 
-                //设置属性的Get Set方法
                 propertyBuilder.SetGetMethod(methodGet);
                 propertyBuilder.SetSetMethod(methodSet);
             }
-            //生成GetUpdatedValues方法，返回已更新的值后清空原始值
+            //generates GetUpdatedValues method，clear original value after returning the updated value 
             var getValueMethodBuilder = typeBuilderProxy.DefineMethod("GetUpdatedValues", MethodAttributes.Assembly | MethodAttributes.Virtual, typeof(Dictionary<string, object>), Type.EmptyTypes);
             var getValueIlGen = getValueMethodBuilder.GetILGenerator();
             getValueIlGen.DeclareLocal(typeof(Dictionary<string, object>));
@@ -183,7 +181,8 @@ namespace EasyORM.DynamicObject
             getValueIlGen.Emit(OpCodes.Ldloc_1);
             getValueIlGen.Emit(OpCodes.Ret);
             typeBuilderProxy.DefineMethodOverride(getValueMethodBuilder, typeof(IGetUpdatedValues).GetMethods().FirstOrDefault());
-            //使用动态类创建类型
+            
+            //build type by using dynamic proxy
             Type proxyClassType = typeBuilderProxy.CreateType();
             dynmicProxyList.Add(type, proxyClassType);
             if (save)
@@ -192,18 +191,23 @@ namespace EasyORM.DynamicObject
         }
 
         /// <summary>
-        /// 创建动态代理类,重写属性Get Set 方法,并监控属性的Set方法,把变更的属性名加入到list集合中,需要监控的属性必须是virtual
+        /// Build dynamic proxy type.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static Type CreateDynamicProxyType<T>()
         {
+            //overrite the Get/Set method of property and listen the Set method,
+            //add the changed property value to list,
+            //and if the proerty want to be listened,it should be virtual
             return CreateDynamicProxyType(typeof(T));
         }
 
         /// <summary>
-        /// 获取属性的变更名称,
-        /// 此处只检测调用了Set方法的属性,不会检测值是否真的有变
+        /// Gets the changed value of property.
+        /// Notes:
+        ///     The method only check whether the Set Method of property is invoked,
+        ///     not check whether the property value is changed really
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -264,7 +268,7 @@ namespace EasyORM.DynamicObject
                 Action<object, object[]> directSetter = null;
                 if (!proxyPropertyDirectSets.TryGetValue(name, out directSetter))
                 {
-                    throw new Exception("未成功生成直接Set方法");
+                    throw new Exception("Not generate the direct set method successfully");
                 }
                 directSetter(proxyObject, new object[] { value });
 
@@ -319,7 +323,7 @@ namespace EasyORM.DynamicObject
             //    Action<object, object[]> directSetter = null;
             //    if (!proxyPropertyDirectSets.TryGetValue(name, out directSetter))
             //    {
-            //        throw new Exception("未成功生成直接Set方法");
+            //        throw new Exception("Not generate the direct set method successfully");
             //    }
             //    directSetter(proxyObject, new object[] { value });
 

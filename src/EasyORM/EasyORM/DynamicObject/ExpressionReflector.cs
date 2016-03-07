@@ -11,7 +11,7 @@ using EasyORM.Utils;
 namespace EasyORM.DynamicObject
 {
     /// <summary>
-    /// 通过表达式树实现类似于反射的功能
+    /// Generic Expression Reflector
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public class ExpressionReflector<TEntity>
@@ -115,7 +115,7 @@ namespace EasyORM.DynamicObject
             Func<TEntity, object> getter = null;
             if (!getters.TryGetValue(propertyName, out getter))
             {
-                throw new Exception("Getter未初始化完整");
+                throw new Exception("Getter don't initialize completely");
             }
             return getter(entity);
         }
@@ -126,7 +126,7 @@ namespace EasyORM.DynamicObject
             Action<TEntity, object> setter = null;
             if (!setters.TryGetValue(propertyName, out setter))
             {
-                throw new Exception("Setter未初始化完整");
+                throw new Exception("Setter don't initialize completely");
             }
             setter(entity, value);
         }
@@ -150,7 +150,7 @@ namespace EasyORM.DynamicObject
     }
 
     /// <summary>
-    /// 通过表达式树实现类似于反射的功能
+    /// Expression Reflector
     /// </summary>
     public class ExpressionReflector
     {
@@ -246,7 +246,7 @@ namespace EasyORM.DynamicObject
                                         }
                                         else
                                         {
-                                            throw new Exception("不支持：" + parameterType);
+                                            throw new Exception("Not supported：" + parameterType);
                                         }
                                         expObj = Expression.Call(null, method, paramObj);
                                         if (nullable)
@@ -273,7 +273,7 @@ namespace EasyORM.DynamicObject
         }
 
         /// <summary>
-        /// 创建实例
+        /// Create instance
         /// </summary>
         /// <param name="type"></param>
         /// <param name="convertType"></param>
@@ -288,12 +288,12 @@ namespace EasyORM.DynamicObject
         static Dictionary<Type, Func<IDataReader, IList>> _dataReader2ListCahce = new Dictionary<Type, Func<IDataReader, IList>>();
 
         /// <summary>
-        /// 获取一个IDataReader转List的委托
+        /// Convert IDataReader to delegate
         /// </summary>
         /// <param name="type"></param>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static Func<IDataReader, IList> GetDataReaderMapeer(Type type,IDataReader reader)
+        public static Func<IDataReader, IList> GetDataReaderMaper(Type type,IDataReader reader)
         {
             Func<IDataReader, IList> func = null;
             if (!_dataReader2ListCahce.TryGetValue(type, out func))
@@ -359,7 +359,7 @@ namespace EasyORM.DynamicObject
                             var constructor = type.GetConstructors().FirstOrDefault();
                             if (constructor == null)
                             {
-                                throw new ArgumentException("类型" + type.FullName + "未找到构造方法");
+                                throw new ArgumentException("Class " + type.FullName + " constructor is not found");
                             }
                             var parameters = constructor.GetParameters();
                             var expressionParams = new List<ParameterExpression>();
@@ -511,7 +511,7 @@ namespace EasyORM.DynamicObject
             Func<object, object> getter = null;
             if (!getters.TryGetValue(propertyName, out getter))
             {
-                throw new Exception("Getter未初始化完整");
+                throw new Exception("Getter don't initialize completely");
             }
             return getter(entity);
         }
@@ -522,7 +522,7 @@ namespace EasyORM.DynamicObject
             Action<object, object> setter = null;
             if (!setters.TryGetValue(propertyName, out setter))
             {
-                throw new Exception("Setter未初始化完整");
+                throw new Exception("Setter don't initialize completely");
             }
             setter(entity, value);
         }
@@ -533,7 +533,7 @@ namespace EasyORM.DynamicObject
         }
 
         /// <summary>
-        /// 只编译出委托，不进行任何缓存
+        /// Get a delegate by method
         /// </summary>
         /// <param name="proxyObject"></param>
         /// <param name="methodName"></param>
@@ -544,7 +544,7 @@ namespace EasyORM.DynamicObject
             var method = proxyType.GetMethod(methodName, argTypes);
             if (method == null)
             {
-                throw new ArgumentException("指定方法未找到");
+                throw new ArgumentException("the method is not found");
             }
             ParameterExpression expression = Expression.Parameter(ExpressionReflectorCore.ObjectType);
             UnaryExpression expression2 = Expression.Convert(expression, proxyType);

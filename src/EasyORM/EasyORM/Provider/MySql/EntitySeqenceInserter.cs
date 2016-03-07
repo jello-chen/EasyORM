@@ -14,12 +14,12 @@ using EasyORM.Configuration;
 namespace EasyORM.Provider.MySql
 {
     /// <summary>
-    /// 当实体主键来源为序列表时，使用该类进行持久化到数据库
+    /// Entity Sequence Inserter
     /// </summary>
-    public class EntitySeqenceInserter : EntityInserterBase
+    public class EntitySequenceInserter : EntityInserterBase
     {
         Table _table;
-        public EntitySeqenceInserter(DataContext context, Table table)
+        public EntitySequenceInserter(DataContext context, Table table)
             : base(context)
         {
             _table = table;

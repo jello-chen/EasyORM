@@ -22,9 +22,6 @@ namespace EasyORM.TranslateModel
         public MemberInfo MemberInfo { get; set; }
         public List<object> Parameters { get; set; }
 
-        /// <summary>
-        /// 调用方是否为列
-        /// </summary>
         public bool IsInstanceColumn { get; set; }
     }
 }

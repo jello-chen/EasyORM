@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace EasyORM.DbUtils.DataAnnotations
 {
     /// <summary>
-    /// 数据来源方式，只对主键列有效
+    /// DataSource attribute,only to be effective to primary key column
     /// </summary>
     public class DataSourceAttribute : Attribute
     {
-        public ColumnType DataSource { get; set; }
+        public KeyColumnType DataSource { get; set; }
     }
 }

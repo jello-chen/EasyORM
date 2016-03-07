@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 using EasyORM.Provider;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -30,8 +27,9 @@ namespace EasyORM.Configuration
         //static Type _nonSelectAttrType = typeof(NonSelectAttribute);
         static Type _dataBaseGeneratedAttrType = typeof(DatabaseGeneratedAttribute);
         static Dictionary<Type, Table> _tableTypeMap = new Dictionary<Type, Table>();
+
         /// <summary>
-        /// 指定类型是否是一个表的类型
+        /// whether to check The type is entity
         /// </summary>
         /// <returns></returns>
         public static bool IsEntity(Type type)
@@ -40,7 +38,7 @@ namespace EasyORM.Configuration
         }
 
         /// <summary>
-        /// 先从缓存找对应实体，若没有则将实体类型转换成Table并加入缓存
+        /// Convert Entity Type to Table
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
@@ -70,7 +68,7 @@ namespace EasyORM.Configuration
         }
 
         /// <summary>
-        /// 将属性转换为列
+        /// Convert PropertyInfo to Column
         /// </summary>
         /// <param name="propertyInfo"></param>
         /// <returns></returns>
@@ -81,7 +79,7 @@ namespace EasyORM.Configuration
             var dataSourceAttribute = (DataSourceAttribute)attrs.FirstOrDefault(x => x is DataSourceAttribute);
             if (databaseGeneratedAttribute != null && dataSourceAttribute != null)
             {
-                throw new Exception(string.Format("实体{0}的列{1}同时标注了DatabaseGenerated与DataSource特性，这两种特性不允许同时使用", propertyInfo.DeclaringType.FullName, propertyInfo.Name));
+                throw new Exception(string.Format(" The attribute DatabaseGenerated and DataSource can't be used on column '{0}' of entity '{1}' at the same time", propertyInfo.Name, propertyInfo.DeclaringType.FullName));
             }
             var columnAttr = (ColumnAttribute)propertyInfo.GetCustomAttributes(_columnAttrType, false).FirstOrDefault();
             var keyAttr = (KeyAttribute)propertyInfo.GetCustomAttributes(_keyAttrType, true).FirstOrDefault();
@@ -102,10 +100,10 @@ namespace EasyORM.Configuration
                 switch (databaseGeneratedAttribute.DatabaseGeneratedOption)
                 {
                     case DatabaseGeneratedOption.Identity:
-                        column.ColumnType = ColumnType.AutoIncreament;
+                        column.ColumnType = KeyColumnType.AutoIncreament;
                         break;
                     case DatabaseGeneratedOption.None:
-                        column.ColumnType = ColumnType.Sequence;
+                        column.ColumnType = KeyColumnType.Sequence;
                         break;
                 }
                 column.IsKey = true;
@@ -117,7 +115,7 @@ namespace EasyORM.Configuration
             }
             else if (column.IsKey)
             {
-                column.ColumnType = ColumnType.AutoIncreament;
+                column.ColumnType = KeyColumnType.AutoIncreament;
             }
             if (columnAttr != null)
             {
@@ -127,7 +125,7 @@ namespace EasyORM.Configuration
         }
 
         /// <summary>
-        /// 根据给定的类型分析表名、数据库名
+        /// Get table by entity type
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
@@ -147,7 +145,7 @@ namespace EasyORM.Configuration
                 }
                 //if (!IsEntity(entityType))
                 //{
-                //    throw new Exception("不是实体类型");
+                //    throw new Exception("not a entity");
                 //}
                 table = ToTable(entityType);
                 GetColumns(table);
@@ -179,14 +177,14 @@ namespace EasyORM.Configuration
                 if (column != null)
                 {
                     column.IsKey = true;
-                    column.ColumnType = ColumnType.AutoIncreament;
+                    column.ColumnType = KeyColumnType.AutoIncreament;
                     table.Key = column;
                 }
             }
         }
 
         /// <summary>
-        /// 获取用于配置指定实体信息的对象
+        /// Get a EntityConfiguration instance
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>

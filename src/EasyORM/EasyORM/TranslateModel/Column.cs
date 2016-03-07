@@ -13,9 +13,6 @@ namespace EasyORM.TranslateModel
         public string Name { get; set; }
         public MemberInfo MemberInfo { get; set; }
 
-        /// <summary>
-        /// 调用者在linq中指定的别名，若未指定别名则为空
-        /// </summary>
         public string Alias { get; set; }
         public Type DataType { get; set; }
 

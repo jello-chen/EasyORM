@@ -11,7 +11,7 @@ using EasyORM.Utils;
 namespace EasyORM.Provider.SQLite
 {
     /// <summary>
-    /// 对应于SQLite的查询语句执行者
+    /// Sql Executor
     /// </summary>
     public class SqlExecutor : SqlExecutorBase
     {
@@ -57,7 +57,7 @@ namespace EasyORM.Provider.SQLite
         }
 
         /// <summary>
-        /// 对参数化查询的参数进行特殊设置
+        /// Set Paramters
         /// </summary>
         /// <param name="parameter"></param>
         /// <param name="parameterName"></param>

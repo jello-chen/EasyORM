@@ -12,7 +12,7 @@ using EasyORM.Utils;
 namespace EasyORM.Provider
 {
     /// <summary>
-    /// 数据库提供者工厂
+    /// Database Provider Factory
     /// </summary>
     public class ProviderFactory
     {
@@ -20,7 +20,7 @@ namespace EasyORM.Provider
         static Dictionary<string, Type> _providerTypes;
 
         /// <summary>
-        /// 根据指定枚举创建提供者实例
+        /// Creates a Provider
         /// </summary>
         /// <param name="databaseType"></param>
         /// <returns></returns>
@@ -34,12 +34,12 @@ namespace EasyORM.Provider
             var types = _providerTypes.Values.Where(x => x.FullName.EndsWith(typeName));
             if (types.Count() > 1)
             {
-                throw new NotSupportedException("找到了多个包含" + typeName + "的提供者类");
+                throw new InvalidOperationException("may be a uncertain provider");
             }
             _type = types.FirstOrDefault();
             if (_type == null)
             {
-                throw new NotSupportedException("未找到提供者类：" + typeName);
+                throw new InvalidOperationException("Not found the provider：" + typeName);
             }
             return (ProviderBase)Activator.CreateInstance(_type, context);
         }

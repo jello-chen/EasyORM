@@ -10,7 +10,7 @@ using EasyORM.Utils;
 namespace EasyORM.Provider.SQLite
 {
     /// <summary>
-    /// SQLite提供者
+    /// SQLite Provider
     /// </summary>
     public class SQLiteProvider : ProviderBase
     {

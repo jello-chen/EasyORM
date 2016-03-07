@@ -20,7 +20,7 @@ namespace EasyORM.Provider.SQLServer
         public EntityOperator(DataContext context):base(context)
         {
         }
-        #region 批量插入
+        #region Bulk insert
         int IEntityOperator.InsertEntities(ArrayList list)
         {
             if (list.Count <= 0)
@@ -29,17 +29,17 @@ namespace EasyORM.Provider.SQLServer
             }
             var type = EntityOperatorUtils.GetNonProxyType(list[0].GetType());
             var table = _entityCfgManager.GetTable(type);
-            var dataSourceType = EntityOperatorUtils.GetDataSourceType(table);
+            var dataSourceType = EntityOperatorUtils.GetKeyColumnType(table);
             EntityInserterBase inserter = null;
             switch (dataSourceType)
             {
-                case ColumnType.AutoIncreament:
+                case KeyColumnType.AutoIncreament:
                     inserter = new EntityIdentityInserter(_context, table);
                     break;
-                case ColumnType.None:
+                case KeyColumnType.None:
                     inserter = new EntityNoneInserter(_context, table);
                     break;
-                case ColumnType.Sequence:
+                case KeyColumnType.Sequence:
                     inserter = new EntitySeqenceInserter(_context, table);
                     break;
             }
@@ -52,7 +52,7 @@ namespace EasyORM.Provider.SQLServer
             var keyValue = values.GetOrDefault(keyColumn.Name);
             if (keyValue == null)
             {
-                throw new InvalidOperationException("字典未传入主键");
+                throw new InvalidOperationException("Not found the key");
             }
             var updateSql = "UPDATE {0} SET {1} WHERE {2}";
             var tableName = _sqlBuilder.GetTableName(table);

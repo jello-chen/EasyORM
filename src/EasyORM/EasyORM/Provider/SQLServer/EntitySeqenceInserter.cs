@@ -14,7 +14,7 @@ using EasyORM.Configuration;
 namespace EasyORM.Provider.SQLServer
 {
     /// <summary>
-    /// 当实体主键来源为序列表时，使用该类进行持久化到数据库
+    /// Entity Seqence Inserter
     /// </summary>
     public class EntitySeqenceInserter : EntityInserterBase
     {
@@ -52,7 +52,7 @@ namespace EasyORM.Provider.SQLServer
             }
             if (list.Count <= 10)
             {
-                #region 使用Insert语句插入
+                #region Insert by using insert sql sentense
                 var insertStart = "insert into {0}({1}) values{2}";
                 var tableName = string.Empty;
                 if (!string.IsNullOrWhiteSpace(_table.DataBase))
@@ -92,7 +92,7 @@ namespace EasyORM.Provider.SQLServer
             }
             else
             {
-                #region 使用SqlBulkCopy插入
+                #region Insert by using SqlBulkCopy
                 var sqlBulkCopy = new SqlBulkCopy(_dataContext.DatabaseConfig.ConnectionString);
                 sqlBulkCopy.DestinationTableName = "dbo.[" + _table.Name + "]";
                 sqlBulkCopy.BulkCopyTimeout = 300;

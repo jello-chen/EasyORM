@@ -9,7 +9,7 @@ namespace EasyORM.DbUtils
     /// <summary>
     /// column type
     /// </summary>
-    public enum ColumnType
+    public enum KeyColumnType
     {
         /// <summary>
         /// manually specify

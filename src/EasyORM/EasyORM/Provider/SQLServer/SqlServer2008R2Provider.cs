@@ -13,13 +13,11 @@ using EasyORM.Utils;
 namespace EasyORM.Provider.SQLServer
 {
     /// <summary>
-    /// SqlServer2008R2提供者
+    /// SqlServer2008R2 Provider
     /// </summary>
     public class SQLServerProvider : ProviderBase
     {
-        /// <summary>
-        /// 实例化
-        /// </summary>
+
         public SQLServerProvider(DataContext context)
             : base(context)
         {
@@ -27,7 +25,7 @@ namespace EasyORM.Provider.SQLServer
         }
 
         /// <summary>
-        /// 返回一个用于在SaveChanges时操作实体的对象
+        ///  Gets a IEntityOperator object
         /// </summary>
         /// <returns></returns>
         public override IEntityOperator CreateEntityOperator()
@@ -36,7 +34,7 @@ namespace EasyORM.Provider.SQLServer
         }
 
         /// <summary>
-        /// 返回一个获取数据库架构的对象
+        /// Gets a Schema Manager object
         /// </summary>
         /// <returns></returns>
         public override SchemaManagerBase CreateSchemaManager()
@@ -45,7 +43,7 @@ namespace EasyORM.Provider.SQLServer
         }
 
         /// <summary>
-        /// 返回一个类型映射工具
+        /// Get s type mapper 
         /// </summary>
         /// <returns></returns>
         public override ITypeMapper CreateTypeMapper()

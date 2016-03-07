@@ -40,7 +40,7 @@ namespace EasyORM.Provider.MySql
                 var typeString = typeMapper.Db2SQLMapper.GetOrDefault(column.DbType);
                 if (string.IsNullOrWhiteSpace(typeString))
                 {
-                    throw new Exception("不支持" + column.DbType.ToString() + "数据类型");
+                    throw new Exception("Not support " + column.DbType.ToString() + " data type");
                 }
                 columnBuilder.Append(typeString);
                 switch (column.DbType)
@@ -75,7 +75,7 @@ namespace EasyORM.Provider.MySql
                         columnBuilder.AppendFormat("({0})", column.MaxLength);
                         break;
                 }
-                if (column.ColumnType == ColumnType.AutoIncreament)
+                if (column.ColumnType == KeyColumnType.AutoIncreament)
                 {
                     columnBuilder.Append(" ");
                     columnBuilder.Append("AUTO_INCREMENT");
@@ -130,11 +130,11 @@ namespace EasyORM.Provider.MySql
                     column.IsKey = Convert.ToBoolean(schemaRow["IsKey"]);
                     if (Convert.ToBoolean(schemaRow["IsAutoincrement"]))
                     {
-                        column.ColumnType = ColumnType.AutoIncreament;
+                        column.ColumnType = KeyColumnType.AutoIncreament;
                     }
                     else
                     {
-                        column.ColumnType = ColumnType.None;
+                        column.ColumnType = KeyColumnType.None;
                     }
                     if (column.IsKey)
                     {
