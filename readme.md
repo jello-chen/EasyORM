@@ -9,13 +9,17 @@ This is a lightweight ORM framework and Support .NET Framework 4.5 and abo
 3. Configurate the ConnectionString in .config
 4. 
 5. 
-        var dataContext = new DataContext("SQLServer");
-		var query = from q in dataContext.Set<T_User>()
-    				select q;
-    	foreach (var item in query)
-    	{
-    		Console.WriteLine("ID:{0},Name:{1}", item.ID, item.Name);
-    	}
+        
+
+	         var dataContext = new DataContext("SQLServer");  
+	         var query = from q in dataContext.Set<T_User>()
+	    		     select q;
+	    	 foreach (var item in query)
+	    	 {
+	    	      Console.WriteLine("ID:{0},Name:{1}", item.ID, item.Name);
+	    	 }
+    	 
+	
 	
 
 
