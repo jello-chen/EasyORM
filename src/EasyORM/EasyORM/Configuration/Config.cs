@@ -34,5 +34,8 @@ namespace EasyORM.Configuration
         /// whether log is enabled
         /// </summary>
         public static bool IsEnableLog { get; set; }
+
+        public static string DataBase { get; set; }
+
     }
 }

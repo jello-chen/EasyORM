@@ -30,7 +30,7 @@ namespace EasyORM.Provider.SQLite
             int page, limit = 10;
             page = (int)Math.Ceiling(list.Count / (double)limit);
             int pageIndex = 1;
-            var insertStart = "insert into {0}({1}) values({2})";
+            var insertStart = "insert into {0}({1}) values{2}";
             var tableName = string.Empty;
             if (!string.IsNullOrWhiteSpace(_table.DataBase))
             {

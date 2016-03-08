@@ -83,6 +83,7 @@ namespace EasyORM
                 Config.IsEnableLog = GlobalConfig.IsEnableLog;
                 Config.SequenceTable = GlobalConfig.SequenceTable;
                 Config.SqlBuilder = GlobalConfig.SqlBuilder;
+                Config.DataBase = GlobalConfig.DataBase;
                 Config.IsEnableAutoCreateTables = string.IsNullOrWhiteSpace(GlobalConfig.IsAutoCreateTables) ? false : Convert.ToBoolean(GlobalConfig.IsAutoCreateTables);
                 Config.IsEnableAllwayAutoCreateTables = string.IsNullOrWhiteSpace(GlobalConfig.IsEnableAllwayAutoCreateTables) ? false : Convert.ToBoolean(GlobalConfig.IsEnableAllwayAutoCreateTables);
             }
