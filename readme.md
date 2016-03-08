@@ -8,7 +8,6 @@ This is a lightweight ORM framework and Support .NET Framework 4.5 and abo
 2. Import namespace `using FadeJson;`
 3. Configurate the ConnectionString in .config
 4. 
-5. 
         
 
 	         var dataContext = new DataContext("SQLServer");  
