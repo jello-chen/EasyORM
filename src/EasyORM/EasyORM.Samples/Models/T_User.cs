@@ -15,7 +15,7 @@ namespace EasyORM.Samples.Models
         [DataSource(DataSource = DbUtils.KeyColumnType.None)]
         [Column("ID"), Key]
         public int ID { get; set; }
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
         public int Age { get; set; }
     }
 }
