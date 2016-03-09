@@ -1,0 +1,56 @@
+﻿<Window x:Class="EasyORM.VSExtension.WizardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"  
+        Height="400" Width="400" Title="Add Wizard" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" ResizeMode="NoResize">
+    <xctk:Wizard CanCancel="False" FinishButtonClosesWindow="False" Name="wizard" CanSelectNextPage="False" FinishButtonContent="Finish" NextButtonContent="Next" BackButtonContent="Back" HelpButtonVisibility="Hidden" CancelButtonVisibility="Hidden" ExteriorPanelMinWidth="100" Finish="wizard_Finish" CanSelectPreviousPage="False" Next="Wizard_Next" PageChanged="wizard_PageChanged">
+
+        <xctk:WizardPage PageType="Blank" Name="wzdSelectDataBase" Title="Select Database">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <ListView Name="lvDataBaseTypes" Grid.Row="1" MouseUp="lvDataBaseTypes_MouseUp">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <TextBlock Text="{Binding Path=Key, Mode=OneWay}" />
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </xctk:WizardPage>
+        <xctk:WizardPage PageType="Blank" Name="wzdSelectDataBaseInfo" Title="Write Database Information">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+            </Grid>
+        </xctk:WizardPage>
+        <xctk:WizardPage PageType="Blank" Name="wzdSelectContent" Title="Select the thing to generate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="5"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="5"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="5"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Quick Filter：" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                <TextBox Name="txtFilter" Text="{Binding Path=Filter, Mode=TwoWay}" Grid.Column="1" KeyUp="txtFilter_KeyUp"></TextBox>
+                <TreeView Name="tvContent" Grid.Row="2" Grid.ColumnSpan="2">
+                </TreeView>
+                <TextBlock Text="Model Name：" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                <TextBox Name="txtModelName" Grid.Row="4" KeyUp="txtModelName_KeyUp" Text="{Binding Path=ModelName, Mode=TwoWay}" Grid.Column="1"></TextBox>
+                <CheckBox Grid.Row="6" Name="chkGenerateDataContext" Grid.ColumnSpan="2" IsChecked="{Binding Path=GenerateDataContext}" Content="Generate DataContext"></CheckBox>
+            </Grid>
+        </xctk:WizardPage>
+    </xctk:Wizard>
+</Window>
