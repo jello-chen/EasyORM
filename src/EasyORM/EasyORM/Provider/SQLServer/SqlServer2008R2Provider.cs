@@ -1,16 +1,4 @@
-﻿using EasyORM.Provider.SQLServer;
-using EasyORM.TranslateModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using EasyORM.DynamicObject;
-using EasyORM.Utils;
-
-namespace EasyORM.Provider.SQLServer
+﻿namespace EasyORM.Provider.SQLServer
 {
     /// <summary>
     /// SqlServer2008R2 Provider

@@ -4,9 +4,6 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using EasyORM.DynamicObject;
 using EasyORM.Utils;
 
 namespace EasyORM.Provider

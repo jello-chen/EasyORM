@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EasyORM.Configuration;
-
-namespace EasyORM.Provider.Parser
+﻿namespace EasyORM.Provider.Parser
 {
     public class NoLockExpressionVisitor:ExpressionVisitorBase
     {

@@ -1,12 +1,9 @@
 ﻿using EasyORM.Provider;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
 using EasyORM.Configuration;
 using EasyORM.Utils;

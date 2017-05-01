@@ -1,14 +1,10 @@
 ﻿using EasyORM.TranslateModel;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using EasyORM.DynamicObject;
 using EasyORM.Utils;
-using EasyORM.Provider.SQLServer;
 namespace EasyORM.Provider.SQLite
 {
     public class SqlBuilder : SqlBuilderBase

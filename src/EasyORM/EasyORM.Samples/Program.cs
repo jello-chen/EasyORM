@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EasyORM.Samples.Models;
 
 namespace EasyORM.Samples
@@ -11,53 +8,67 @@ namespace EasyORM.Samples
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("{0}Query{0}", "-------------------");
+            var rules = string.Join(string.Empty, Enumerable.Range(1, 20).Select(t => "-"));
+
             var dataContext = new DataContext("SQLServer");
-            var dbSets = dataContext.Set<T_User>();
-            var query = from q in dbSets
-                        select q;
-            foreach (var item in query)
-            {
-                Console.WriteLine("ID:{0},Name:{1}", item.ID, item.Name);
-            }
-            Console.WriteLine("{0}Insert{0}", "-------------------");
-            var user = new T_User();
-            user.ID = 19;
-            user.Name = "Tommy";
-            user.Age = 20;
-            var user1 = new T_User();
-            user1.ID = 20;
-            user1.Name = "David";
-            user1.Age = 20;
-            dbSets.Add(user);
-            dbSets.Add(user1);
+            var departments = dataContext.Set<T_Department>();
+            var students = dataContext.Set<T_Student>();
+
+            //Console.WriteLine($"{rules}Query{rules}");
+            //var query = from s in departments
+            //            select s;
+            //foreach (var item in query)
+            //{
+            //    Console.WriteLine($"ID:{item.ID},Name:{item.Name}");
+            //}
+
+            //Console.WriteLine($"{rules}Insert{rules}");
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    var department = new T_Department
+            //    {
+            //        Name = $"D{i}"
+            //    };
+            //    departments.Add(department);
+            //}
+            
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    var student = new T_Student
+            //    {
+            //        Name = $"Name{i}",
+            //        Age = 20 + i,
+            //        DepartmentID = i
+            //    };
+            //    students.Add(student);
+            //}
+            //dataContext.SaveChanges();
+
+            //Console.WriteLine($"{rules}Join{rules}");
+            //var j = from q in students
+            //            join p in departments
+            //            on q.DepartmentID equals p.ID
+            //            select new {
+            //                ID = q.ID,
+            //                StudentName = q.Name,
+            //                StudentAge = q.Age,
+            //                DepartmentName = p.Name
+            //            };
+            //foreach (var item in j)
+            //{
+            //    Console.WriteLine($"ID:{item.ID},StudentName:{item.StudentName},StudentAge:{item.StudentAge},DepartmentName:{item.DepartmentName}");
+            //}
+
+            //Console.WriteLine($"{rules}Delete{rules}");
+            //var studentModel = students.FirstOrDefault(t => t.DepartmentID == 0);
+            //students.Remove(studentModel);
+            //dataContext.SaveChanges();
+
+            Console.WriteLine($"{rules}Delete{rules}");
+            var studentModel1 = students.FirstOrDefault(t => t.DepartmentID == 1);
+            studentModel1.Age = 18;
             dataContext.SaveChanges();
-            foreach (var item in dbSets)
-            {
-                Console.WriteLine("ID:{0},Name:{1}", item.ID, item.Name);
-            }
-            Console.WriteLine("{0}Update{0}", "-------------------");
-            var model = dbSets.FirstOrDefault();
-            if (model != null)
-            {
-                model.Name += model.Age;
-            }
-            dataContext.SaveChanges();
-            foreach (var item in dbSets)
-            {
-                Console.WriteLine("ID:{0},Name:{1}", item.ID, item.Name);
-            }
-            Console.WriteLine("{0}Delete{0}", "-------------------");
-            model = dbSets.FirstOrDefault(u => u.ID == 11);
-            if (model != null)
-            {
-                dbSets.Remove(model);
-            }
-            dataContext.SaveChanges();
-            foreach (var item in dbSets)
-            {
-                Console.WriteLine("ID:{0},Name:{1}", item.ID, item.Name);
-            }
+
             Console.ReadKey();
         }
     }

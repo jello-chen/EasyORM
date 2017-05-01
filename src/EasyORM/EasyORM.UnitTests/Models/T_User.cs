@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EasyORM.UnitTests.Models
+﻿namespace EasyORM.UnitTests.Models
 {
     class T_User
     {

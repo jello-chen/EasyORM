@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using EasyORM.SchemaModel;
 using EasyORM.Utils;
-using EasyORM.DbUtils.DataAnnotations;
 using EasyORM.DbUtils;
 
 namespace EasyORM.Provider.SQLServer

@@ -1,15 +1,10 @@
 ﻿using EasyORM.Provider;
-using EasyORM.Provider.Parser;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using EasyORM.DbUtils;
 using EasyORM.DynamicObject;
 using EasyORM.Utils;
 using EasyORM.Configuration;
