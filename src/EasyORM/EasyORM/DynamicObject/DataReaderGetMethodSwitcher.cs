@@ -119,5 +119,15 @@ namespace EasyORM.DynamicObject
         {
             throw new NotImplementedException();
         }
+
+        protected override void ProcessGuid()
+        {
+            Result = Expression.Call(_readerExp, ReflectorConsts.GetGuidOfIDataReader, _indexExp);
+        }
+
+        protected override void ProcessGuidNullable()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

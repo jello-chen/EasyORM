@@ -58,7 +58,6 @@ namespace EasyORM.Utils
         /// <returns></returns>
         public static bool IsValueType(Type type)
         {
-            int? i = 1;
             type = GetUnderlyingType(type);
             if (type.IsPrimitive)
             {

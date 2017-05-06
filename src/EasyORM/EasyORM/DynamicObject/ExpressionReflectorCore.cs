@@ -32,6 +32,8 @@ namespace EasyORM.DynamicObject
             EntityPropertyTypes.Add(typeof(double));
             EntityPropertyTypes.Add(typeof(byte));
             EntityPropertyTypes.Add(typeof(byte?));
+            EntityPropertyTypes.Add(typeof(Guid));
+            EntityPropertyTypes.Add(typeof(Guid?));
         }
 
         public static IDictionary<string, PropertyInfo> GetProperties(Type entityType)

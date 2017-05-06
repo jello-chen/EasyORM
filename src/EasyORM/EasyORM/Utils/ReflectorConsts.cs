@@ -44,6 +44,9 @@ namespace EasyORM.Utils
         public static readonly Type TimeSpanType = typeof(TimeSpan);
         public static readonly Type CompilerGeneratedAttributeType = typeof(CompilerGeneratedAttribute);
 
+        public static readonly Type GuidType = typeof(Guid);
+        public static readonly Type GuidNullableType = typeof(Guid?);
+
         public static readonly MethodInfo OrderByMethod = QueryableType.GetMethods().FirstOrDefault(x => x.Name == "OrderBy" && x.GetParameters().Length == 2);
         public static readonly MethodInfo OrderByDescendingMethod = QueryableType.GetMethods().FirstOrDefault(x => x.Name == "OrderByDescending" && x.GetParameters().Length == 2);
         public static readonly MethodInfo ThenByMethod = QueryableType.GetMethods().FirstOrDefault(x => x.Name == "ThenBy" && x.GetParameters().Length == 2);
@@ -68,6 +71,7 @@ namespace EasyORM.Utils
         public static readonly MethodInfo GetDecimalOfIDataReader = IDataRecordType.GetMethod("GetDecimal", new Type[] { Int32Type });
         public static readonly MethodInfo GetDateTimeOfIDataReader = IDataRecordType.GetMethod("GetDateTime", new Type[] { Int32Type });
         public static readonly MethodInfo GetOrdinalOfIDataReader = IDataRecordType.GetMethod("GetOrdinal", new Type[] { StringType });
+        public static readonly MethodInfo GetGuidOfIDataReader = IDataRecordType.GetMethod("GetGuid", new Type[] { Int32Type });
         public static readonly MethodInfo ReadOfIDataReader = IDataReaderType.GetMethod("Read", Type.EmptyTypes);
 
 

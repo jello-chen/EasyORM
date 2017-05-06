@@ -32,6 +32,8 @@ namespace EasyORM.Provider.SQLServer
             _net2DbMapper.Add(typeof(byte), DbType.Byte);
             _net2DbMapper.Add(typeof(byte?), DbType.Byte);
             _net2DbMapper.Add(typeof(byte[]), DbType.Binary);
+            _net2DbMapper.Add(typeof(Guid), DbType.Guid);
+            _net2DbMapper.Add(typeof(Guid?), DbType.Guid);
 
             _db2NetMapper.Add(DbType.DateTime2, ReflectorConsts.DateTimeType);
             _db2NetMapper.Add(DbType.Int32, ReflectorConsts.Int32Type);
@@ -44,6 +46,7 @@ namespace EasyORM.Provider.SQLServer
             _db2NetMapper.Add(DbType.Boolean, typeof(bool));
             _db2NetMapper.Add(DbType.Byte, typeof(byte));
             _db2NetMapper.Add(DbType.Binary, typeof(byte[]));
+            _db2NetMapper.Add(DbType.Guid, typeof(Guid));
 
             _db2SQLMapper.Add(DbType.DateTime2, "DATETIME2");
             _db2SQLMapper.Add(DbType.DateTime, "DATETIME");
@@ -59,6 +62,7 @@ namespace EasyORM.Provider.SQLServer
             _db2SQLMapper.Add(DbType.Boolean, "BIT");
             _db2SQLMapper.Add(DbType.Int16, "SHORT");
             _db2SQLMapper.Add(DbType.Binary, "VARBINARY");
+            _db2SQLMapper.Add(DbType.Guid, "UNIQUEIDENTIFIER");
         }
         public Dictionary<Type, System.Data.DbType> Net2DbMapper
         {

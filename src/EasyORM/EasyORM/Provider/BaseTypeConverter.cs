@@ -140,5 +140,18 @@ namespace EasyORM.Provider
                 ProcessDateTime();
             }
         }
+
+        protected override void ProcessGuid()
+        {
+            Result = (Guid)_obj;
+        }
+
+        protected override void ProcessGuidNullable()
+        {
+            if(_obj != null)
+            {
+                ProcessGuid();
+            }
+        }
     }
 }

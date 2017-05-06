@@ -208,5 +208,15 @@ namespace EasyORM.Provider
         {
             ProcessNullableType<DateTime>();
         }
+
+        protected override void ProcessGuid()
+        {
+            ProcessType<Guid>();
+        }
+
+        protected override void ProcessGuidNullable()
+        {
+            ProcessNullableType<Guid>();
+        }
     }
 }

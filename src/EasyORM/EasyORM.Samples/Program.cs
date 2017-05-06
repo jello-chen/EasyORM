@@ -12,7 +12,7 @@ namespace EasyORM.Samples
 
             var dataContext = new DataContext("SQLServer");
             var departments = dataContext.Set<T_Department>();
-            var students = dataContext.Set<T_Student>();
+            var students = dataContext.Set<Student>();
 
             //Console.WriteLine($"{rules}Query{rules}");
             //var query = from s in departments
@@ -66,7 +66,7 @@ namespace EasyORM.Samples
 
             Console.WriteLine($"{rules}Delete{rules}");
             var studentModel1 = students.FirstOrDefault(t => t.DepartmentID == 1);
-            studentModel1.Age = 18;
+            studentModel1.Age = 22;
             dataContext.SaveChanges();
 
             Console.ReadKey();

@@ -113,9 +113,10 @@ namespace EasyORM.DynamicObject
                 {
                     ProcessFloat();
                 }
-            }else if(_type==ReflectorConsts.DecimalType)
+            }
+            else if (_type == ReflectorConsts.DecimalType)
             {
-                if(IsNullable)
+                if (IsNullable)
                 {
                     ProcessDecimalNullable();
                 }
@@ -123,15 +124,27 @@ namespace EasyORM.DynamicObject
                 {
                     ProcessDecimal();
                 }
-            }else if(_type==ReflectorConsts.DateTimeType)
+            }
+            else if (_type == ReflectorConsts.DateTimeType)
             {
-                if(IsNullable)
+                if (IsNullable)
                 {
                     ProcessDateTimeNullable();
                 }
                 else
                 {
                     ProcessDateTime();
+                }
+            }
+            else if(_type == ReflectorConsts.GuidType)
+            {
+                if(IsNullable)
+                {
+                    ProcessGuidNullable();
+                }
+                else
+                {
+                    ProcessGuid();
                 }
             }
             else
@@ -184,5 +197,8 @@ namespace EasyORM.DynamicObject
             SwitchBaseType();
         }
         protected abstract void ProcessEnumNullable();
+
+        protected abstract void ProcessGuid();
+        protected abstract void ProcessGuidNullable();
     }
 }

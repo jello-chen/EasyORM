@@ -145,5 +145,17 @@ namespace EasyORM.Provider
             var set = ((IEnumerable<DateTime?>)_list).Where(x => x.HasValue).Select(x => x.Value);
             FillConverter(set);
         }
+
+        protected override void ProcessGuid()
+        {
+            var set = ((IEnumerable<Guid>)_list);
+            FillConverter(set);
+        }
+
+        protected override void ProcessGuidNullable()
+        {
+            var set = ((IEnumerable<Guid?>)_list).Where(x => x.HasValue).Select(x => x.Value);
+            FillConverter(set);
+        }
     }
 }
