@@ -4,12 +4,14 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using EasyORM.Utils;
+using System.IO;
 
 namespace EasyORM.DynamicObject
 {
     public class DynamicProxy
     {
-        private const string DynamicAssemblyName = "DynamicAssembly"; 
+        private const string DynamicAssemblyName = "DynamicAssembly";
+        private const string DynamicAssemblyFileName = "EasyORM_Temp.dll";
         private const string DynamicModuleName = "DynamicAssemblyModule";
         private const string ProxyClassNameFormater = "{0}_Proxy";
         private static IDictionary<Type, IDictionary<string, Action<object, object[]>>> _propertyDirectSetCache = new Dictionary<Type, IDictionary<string, Action<object, object[]>>>();
@@ -20,6 +22,7 @@ namespace EasyORM.DynamicObject
         private static IDictionary<Type, IList<PropertyInfo>> proxyProperties = new Dictionary<Type, IList<PropertyInfo>>();
         private static MethodInfo addMethod;
         private static MethodInfo removeMethod;
+
         static DynamicProxy()
         {
             modifiedPropertyTypeConstructor = ModifiedPropertyNamesType.GetConstructor(new Type[0]);
@@ -44,8 +47,17 @@ namespace EasyORM.DynamicObject
             AssemblyBuilderAccess assemblyBuilderAccess = isSavaDll
                 ? AssemblyBuilderAccess.RunAndSave
                 : AssemblyBuilderAccess.Run;
+            var path = string.Empty;
+            if(!string.IsNullOrEmpty(System.Web.HttpRuntime.AppDomainAppVirtualPath))
+            {
+                path = System.Web.HttpRuntime.BinDirectory;
+            }
+            else
+            {
+                path = AppDomain.CurrentDomain.BaseDirectory;
+            }
             AssemblyBuilder dynamicAssembly = AppDomain.CurrentDomain.DefineDynamicAssembly(DemoName,
-                assemblyBuilderAccess);
+                assemblyBuilderAccess, path);
             return dynamicAssembly;
         }
 
@@ -57,7 +69,7 @@ namespace EasyORM.DynamicObject
         {
             if (save)
             {
-                return dynamicAssembly.DefineDynamicModule(DynamicModuleName, "test.dll");
+                return dynamicAssembly.DefineDynamicModule(DynamicModuleName, DynamicAssemblyFileName);
             }
             return dynamicAssembly.DefineDynamicModule(DynamicModuleName);
         }
@@ -184,7 +196,10 @@ namespace EasyORM.DynamicObject
             Type proxyClassType = typeBuilderProxy.CreateType();
             dynmicProxyList.Add(type, proxyClassType);
             if (save)
-                assemblyBuilder.Save("test.dll");
+            {
+                //assemblyBuilder.Save(DynamicAssemblyFileName);
+            }
+            
             return proxyClassType;
         }
 
@@ -338,5 +353,6 @@ namespace EasyORM.DynamicObject
         {
             return type.Name.EndsWith(type.BaseType.Name + "_Proxy" + type.BaseType.GetHashCode().ToString());
         }
+
     }
 }

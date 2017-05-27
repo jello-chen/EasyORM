@@ -1,0 +1,26 @@
+﻿@model List<EasyORM.Samples.Web.Models.Student>
+@{
+    ViewBag.Title = "Index";
+}
+<h2>Index</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Operation</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.ID</td>
+                <td>@student.Name</td>
+                <td>@student.Age</td>
+                <td>@Html.ActionLink("Edit", "Edit", new { id = student.ID })</td>
+            </tr>
+        }
+    </tbody>
+</table>

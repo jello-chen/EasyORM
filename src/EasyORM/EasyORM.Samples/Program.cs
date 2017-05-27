@@ -10,9 +10,16 @@ namespace EasyORM.Samples
         {
             var rules = string.Join(string.Empty, Enumerable.Range(1, 20).Select(t => "-"));
 
-            var dataContext = new DataContext("SQLServer");
-            var departments = dataContext.Set<T_Department>();
-            var students = dataContext.Set<Student>();
+            Edit();
+
+            Edit1();
+
+            Query();
+
+
+            //var dataContext = new DataContext("SQLServer");
+            //var departments = dataContext.Set<T_Department>();
+            //var students = dataContext.Set<Student>();
 
             //Console.WriteLine($"{rules}Query{rules}");
             //var query = from s in departments
@@ -64,12 +71,35 @@ namespace EasyORM.Samples
             //students.Remove(studentModel);
             //dataContext.SaveChanges();
 
-            Console.WriteLine($"{rules}Delete{rules}");
-            var studentModel1 = students.FirstOrDefault(t => t.DepartmentID == 1);
-            studentModel1.Age = 22;
-            dataContext.SaveChanges();
-
             Console.ReadKey();
+        }
+
+        static void Edit()
+        {
+            var dataContext = new DataContext("SQLServer");
+            var students = dataContext.Set<Student>();
+            var studentModel1 = students.FirstOrDefault(t => t.ID == 2);
+            studentModel1.Age = 20;
+            dataContext.SaveChanges();
+        }
+
+        static void Edit1()
+        {
+            var dataContext = new DataContext("SQLServer");
+            var students = dataContext.Set<Student>();
+            var studentModel1 = students.FirstOrDefault(t => t.ID == 2);
+            studentModel1.Age = 21;
+            dataContext.SaveChanges();
+        }
+
+        static void Query()
+        {
+            var dataContext = new DataContext("SQLServer");
+            var students = dataContext.Set<Student>();
+            foreach (var student in students)
+            {
+                Console.WriteLine($"ID:{student.ID},Age:{student.Age}");
+            }
         }
     }
 }
