@@ -283,6 +283,19 @@ namespace EasyORM.Provider.SQLServer
             return converter;
         }
 
+        string FormatConverter(bool isColumnCaller, string rawConverter, string converter, string param1, string param2)
+        {
+            if (isColumnCaller)
+            {
+                converter = string.Format(rawConverter, string.Format(converter, param1, "{0}", param2));
+            }
+            else
+            {
+                converter = string.Format(rawConverter, string.Format(converter, "{0}", param1, param2));
+            }
+            return converter;
+        }
+
         public override string ParseConverter(Column column)
         {
             var converter = string.Empty;
@@ -347,13 +360,33 @@ namespace EasyORM.Provider.SQLServer
                         }
                         throw new Exception(" Not Supported ");
                     case MemberTypes.Method:
-                        if (memberInfo.DeclaringType == ReflectorConsts.StringType)
+                        if(memberInfo.DeclaringType == ReflectorConsts.Int32Type)
+                        {
+                            switch (memberInfo.Name)
+                            {
+                                case "ToString":
+                                    converter = string.Format(converter, string.Format(converter, "CAST({0} AS NVARCHAR(MAX))"));
+                                    break;
+                                default:
+                                    throw new Exception(" Not Supported ");
+                            }
+                        }
+                        else if (memberInfo.DeclaringType == ReflectorConsts.StringType)
                         {
                             switch (memberInfo.Name)
                             {
                                 case "Contains":
-                                    converter = FormatConverter(columnConverter.IsInstanceColumn, converter, "CHARINDEX({0},{1})>0", paramName);
-                                    _result.Parameters.Add(paramName, args[0]);
+                                    var token = args[0] as Token;
+                                    if (token != null)
+                                    {
+                                        var c = StartBuildCondition(token);
+                                        converter = FormatConverter(columnConverter.IsInstanceColumn, converter, "CHARINDEX({0},{1})>0", c);
+                                    }
+                                    else
+                                    {
+                                        converter = FormatConverter(columnConverter.IsInstanceColumn, converter, "CHARINDEX({0},{1})>0", paramName);
+                                        _result.Parameters.Add(paramName, args[0]);
+                                    }
                                     break;
                                 case "StartsWith":
                                     converter = FormatConverter(columnConverter.IsInstanceColumn, converter, "CHARINDEX({0},{1})=1", paramName);
@@ -364,7 +397,7 @@ namespace EasyORM.Provider.SQLServer
                                     {
                                         if (columnConverter.IsInstanceColumn)
                                         {
-                                            converter = string.Format(converter, "SUBSTRING({0}," + (Convert.ToInt32(columnConverter.Parameters[0]) + 1) + ",LEN({0})+1-" + columnConverter.Parameters[0] + ")");
+                                            converter = string.Format(converter, "SUBSTRING({0}," + (Convert.ToInt32(columnConverter.Parameters[0]) + 1) + ",LEN({0})-" + columnConverter.Parameters[0] + ")");
                                         }
                                         else
                                         {
@@ -381,6 +414,24 @@ namespace EasyORM.Provider.SQLServer
                                         {
                                             throw new Exception(" Not Supported ");
                                         }
+                                    }
+                                    else
+                                    {
+                                        throw new Exception(" Not Supported ");
+                                    }
+                                    break;
+                                case "IndexOf":
+                                    if (args.Count == 1)
+                                    {
+                                        converter = FormatConverter(columnConverter.IsInstanceColumn, converter, "CHARINDEX({0},{1})-1", paramName);
+                                        _result.Parameters.Add(paramName, args[0]);
+                                    }
+                                    else if (args.Count == 2)
+                                    {
+                                        var paramName2 = "@" + ParserUtils.GenerateAlias("param");
+                                        converter = FormatConverter(columnConverter.IsInstanceColumn, converter, "CHARINDEX({0},{1},{2})-1", paramName, paramName2);
+                                        _result.Parameters.Add(paramName, args[0]);
+                                        _result.Parameters.Add(paramName2, args[1]);
                                     }
                                     else
                                     {

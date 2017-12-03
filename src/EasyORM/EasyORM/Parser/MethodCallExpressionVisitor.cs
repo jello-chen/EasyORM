@@ -128,6 +128,14 @@ namespace EasyORM.Provider.Parser
                     var argObjects = args.Select(x => x.Object);
                     Token.Column.Converters.Push(new ColumnConverter(method, argObjects.ToList(), true));
                 }
+                else if (body.Token.Type == TokenType.Column && _isColumn)
+                {
+                    Token = body.Token;
+                    var method = node.Method;
+                    var parameters = new List<object>();
+                    parameters.AddRange(args);
+                    Token.Column.Converters.Push(new ColumnConverter(method, parameters, true));
+                }
                 else if (body.Token.Type == TokenType.Object && !_isColumn)
                 {
                     Token = Token.Create(node.Method.Invoke(body.Token.Object, args.Select(x => x.Object).ToArray()));
